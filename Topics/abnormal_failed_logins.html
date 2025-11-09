@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abnormal Failed Account Logins | Cybersecurity Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Abnormal Failed Account Logins</h1>
+    <nav>
+      <a href="../index.html">Home</a> |
+      <a href="phishing_analysis.html">Next Topic</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Overview -->
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        This section covers detection, analysis, and remediation of abnormal failed account logins.
+        These events can indicate brute-force attempts, credential stuffing, or misconfigured applications.
+      </p>
+    </section>
+
+    <!-- Attack Description -->
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <ul>
+        <li><strong>Goal:</strong> Gain unauthorized access through repeated failed logins.</li>
+        <li><strong>Common Sources:</strong> External IPs, automated scripts, compromised devices.</li>
+        <li><strong>Indicators:</strong> High login failure rate, unusual user accounts, geolocation anomalies.</li>
+      </ul>
+    </section>
+
+    <!-- Detection Workflow -->
+    <section id="detection">
+      <h2>Detection Workflow</h2>
+      <ol>
+        <li>Identify patterns in authentication logs (e.g., multiple failures within a short window).</li>
+        <li>Correlate IPs, usernames, and timestamps across systems.</li>
+        <li>Check for known brute-force tools or login automation signatures.</li>
+        <li>Determine whether the failures are from valid users or external sources.</li>
+      </ol>
+    </section>
+
+    <section id="workflow">
+  <h2>Analysis Workflow</h2>
+  <p>This workflow guides the analyst through triaging abnormal failed account logins based on context and log source.</p>
+
+  <ul>
+    <li><strong>Local Logon Type?</strong>
+      <ul>
+        <li><strong>Yes:</strong> Conduct the following actions:
+          <ul>
+            <li>Check for repeated failed logins from the same workstation.</li>
+            <li>Verify if the user recently changed passwords or had lockouts.</li>
+            <li>Correlate with help desk or self-service reset activity.</li>
+          </ul>
+        </li>
+
+        <li><strong>No:</strong>
+          <ul>
+            <li><strong>From a trusted network?</strong>
+              <ul>
+                <li><strong>Yes:</strong>
+                  <ul>
+                    <li>Review system and user activity logs for internal threat indicators.</li>
+                    <li>Validate MFA logs for sign-in success or denial.</li>
+                  </ul>
+                </li>
+                <li><strong>No:</strong>
+                  <ul>
+                    <li>Check geolocation and ASN reputation of the source IP.</li>
+                    <li>Query threat intel feeds for malicious indicators.</li>
+                    <li>Proceed to escalation and incident creation if verified malicious.</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</section>
+
+
+    <!-- Tools & Queries -->
+    <section id="tools">
+      <h2>Tools & Queries</h2>
+      <pre><code class="language-splunk">
+index=auth sourcetype=windows:security EventCode=4625
+| stats count by user, src_ip
+| where count > 10
+      </code></pre>
+
+      <pre><code class="language-kql">
+SigninLogs
+| where ResultType != 0
+| summarize FailedLogins=count() by UserPrincipalName, IPAddress
+| where FailedLogins > 5
+      </code></pre>
+    </section>
+
+    <!-- Response Workflow -->
+    <section id="response">
+      <h2>Response Workflow</h2>
+      <ol>
+        <li>Validate the affected accounts and notify users if necessary.</li>
+        <li>Block or rate-limit malicious IP addresses.</li>
+        <li>Force password resets if credential compromise is suspected.</li>
+        <li>Review MFA enforcement and password policy configurations.</li>
+      </ol>
+    </section>
+
+    <!-- References -->
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li><a href="https://attack.mitre.org/techniques/T1110/">MITRE ATT&CK: Brute Force (T1110)</a></li>
+        <li><a href="https://owasp.org/">OWASP Authentication Cheat Sheet</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Cybersecurity Analyst Handbook</p>
+  </footer>
+</body>
+</html>
