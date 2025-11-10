@@ -1,0 +1,90 @@
+/* === Global Layout === */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F5F1E3; /* 4ID tan/cream background */
+  color: #1A1A1A; /* dark text for contrast */
+  margin: 0;
+  padding: 1.5rem;
+  line-height: 1.6;
+}
+
+/* === Header & Footer === */
+header, footer {
+  background-color: #00563F; /* 4ID green */
+  color: #F5F1E3; /* cream text for contrast */
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+h1, h2 {
+  color: #00563F;
+  margin-top: 0;
+}
+
+/* === Navigation Links (Header/Footer) === */
+header a, footer a {
+  color: #E3DCC3; /* light tan-green for links */
+  text-decoration: none;
+  font-weight: 500;
+}
+header a:hover, footer a:hover {
+  text-decoration: underline;
+  color: #C9C19F;
+}
+
+/* === Main Content Links (Reference, MITRE, etc.) === */
+main a {
+  color: #00563F; /* 4ID green */
+  text-decoration: underline;
+  font-weight: 500;
+}
+main a:hover {
+  color: #C9C19F; /* tan on hover */
+  text-decoration: none;
+}
+
+
+/* === Content Sections === */
+section {
+  background-color: #FAF8F0;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #CFCAB8;
+}
+
+/* === Workflow Section Styling === */
+#workflow ul {
+  list-style-type: none;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #00563F;
+}
+
+#workflow li {
+  margin: 0.5rem 0;
+}
+
+#workflow strong {
+  color: #00563F;
+}
+
+/* === Code Blocks / Queries === */
+code, pre {
+  background-color: #EEE9D7;
+  color: #1A1A1A;
+  padding: 0.5rem;
+  border-radius: 5px;
+  display: block;
+  overflow-x: auto;
+  font-family: 'Consolas', monospace;
+  border-left: 3px solid #00563F;
+}
+
+/* === Footer === */
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 3rem;
+}
