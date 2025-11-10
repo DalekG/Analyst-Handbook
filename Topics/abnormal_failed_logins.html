@@ -49,66 +49,73 @@
 
     <section id="workflow">
   <h2>Analysis Workflow</h2>
-  <p>This workflow guides the analyst through triaging abnormal failed account logins based on context and log source.</p>
+  <p>Use this guided workflow to triage abnormal failed account logins based on context and source.</p>
 
-  <ul>
-    <li><strong>Local Logon Type?</strong>
-      <ul>
-        <li><strong>Yes:</strong> Conduct the following actions:
-          <ul>
-            <li>1. Check for repeated failed logins from the same workstation.</li>
-            <li>2. Contact system owner, AO help-desk, or section</li>
-            <li>3. Verify if the user recently changed passwords or had lockouts.</li>
-            <li>4. Identify reason for failed logins.</li>
-          </ul>
-        </li>
-        <li><strong>No:</strong>
-          <ul>
-            <li><strong>From a trusted network?</strong>
-              <ul>
-                <li><strong>Yes:</strong>
-                  <ul>
-                    <li>1. Contact network owner, and identify reason for activity</li>
-                    <li>2. Review system and user activity logs for internal threat indicators.</li>
-                    <li>3. Validate external network ability/reason for access.</li>
-                  </ul>
-                </li>
-        <li><strong>No:</strong>
-          <ul>
-            <li><strong>Did this happen across multiple machines?</strong>
-              <ul>
-                <li><strong>Yes:</strong>
-                  <li>1. Determine if malicious application caused failures.</li>
-                  <li>2. Determine if network or application authentication caused failures.</li>
-                  <li>3. Determine if successful login occurred.</li>
-                  </ul>
-                </li>
-                <li><strong>No:</strong>
-                  <ul>
-                    <li><strong>Is this an Incident?</strong>
-                      <ul>
-                        <li><strong>Yes:</strong>
-                          <li>1. Gather artifacts (logs, affected hosts, malicious application, source IP address)</li>
-                          <li>2. Prepare cyber 9-line</li>
-                          <li>3. Senior CND analyst review</li>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-                <li><strong>No:</strong>
-                  <ul>
-                  <li>1. Senior CND analyst review.</li>
-                  <li>2. Determine false positives and eliminate them.</li>
-                </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
+  <details>
+    <summary><strong>Local Logon Type?</strong></summary>
+    <p><strong>Yes:</strong> Conduct the following actions:</p>
+    <ol>
+      <li>Check for repeated failed logins from the same workstation.</li>
+      <li>Contact system owner, AO help-desk, or section.</li>
+      <li>Verify if the user recently changed passwords or had lockouts.</li>
+      <li>Identify reason for failed logins.</li>
+    </ol>
+
+    <details>
+      <summary><strong>No:</strong></summary>
+      <details>
+        <summary><strong>From a trusted network?</strong></summary>
+        <details>
+          <summary><strong>Yes:</strong></summary>
+          <ol>
+            <li>Contact network owner and identify reason for activity.</li>
+            <li>Review system and user activity logs for internal threat indicators.</li>
+            <li>Validate external network ability/reason for access.</li>
+          </ol>
+        </details>
+
+        <details>
+          <summary><strong>No:</strong></summary>
+          <details>
+            <summary><strong>Happen across multiple machines?</strong></summary>
+            <details>
+              <summary><strong>Yes:</strong></summary>
+              <ol>
+                <li>Determine if malicious application caused failure</li>
+                <li>Determine if network or application authentication caused failures.</li>
+                <li>Determin if successful login occurred.</li>
+              </ol>
+            </details>
+
+          <details>
+            <summary><strong>No:</strong></summary>
+            <details>
+              <summary><strong>Is this an incident?</strong></summary>
+              <details>
+                <summary><strong>Yes:</strong></summary>
+                <ol>
+                  <li>Gather artifacts (logs, affected hosts, malicious application, source IP address(es))</li>
+                  <li>Prepare cyber 9-line.</li>
+                  <li>Senior CND analyst review.</li>
+                </ol>
+              </details>
+
+          <details>
+            <summary><strong>No:</strong></summary>
+              <ol>
+                <li>Senior CND analyst review.</li>
+                <li>Determine false positives and eliminate them.</li>
+              </ol>
+          </details>
+                  </details>
+                </details>
+              </details>
+            </details>
+          </details>
+        </details>
+      </details>
+    </details>
+  </details>
 </section>
 
 
