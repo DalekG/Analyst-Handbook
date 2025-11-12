@@ -1,7 +1,7 @@
 # Abnormal Amount of Failed logins
 Local Login Type?\
-  Yes:\
-    Conduct these actions\
+> Yes:\
+> Conduct these actions\
   No:\
 From Trusted Network?\
   Yes:\
