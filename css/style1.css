@@ -1,0 +1,45 @@
+/* === Global Page Styles === */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fdf6e3; /* Cream/tan background */
+  color: #222;
+  margin: 40px;
+  line-height: 1.6;
+}
+
+h1 {
+  color: #004225; /* 4ID Green */
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* === Text Formatting === */
+.workflow {
+  margin-left: 20px;
+  white-space: pre-line; /* keeps formatting and indentation */
+}
+
+.step-question {
+  color: #004225;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.step-answer {
+  margin-left: 20px;
+}
+
+ul {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-left: 40px;
+}
+
+a {
+  color: #004225; /* 4ID green */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #b79a59; /* Tan hover */
+}

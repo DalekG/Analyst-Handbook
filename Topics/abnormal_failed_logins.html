@@ -51,72 +51,62 @@
   <h2>Analysis Workflow</h2>
   <p>Use this guided workflow to triage abnormal failed account logins based on context and source.</p>
 
-  <details>
-    <summary><strong>Local Logon Type?</strong></summary>
-    <p><strong>Yes:</strong> Conduct the following actions:</p>
-    <ol>
-      <li>Check for repeated failed logins from the same workstation.</li>
-      <li>Contact system owner, AO help-desk, or section.</li>
-      <li>Verify if the user recently changed passwords or had lockouts.</li>
-      <li>Identify reason for failed logins.</li>
-    </ol>
+  <div class="workflow">
 
-    <details>
-      <summary><strong>No:</strong></summary>
-      <details>
-        <summary><strong>From a trusted network?</strong></summary>
-        <details>
-          <summary><strong>Yes:</strong></summary>
-          <ol>
-            <li>Contact network owner and identify reason for activity.</li>
-            <li>Review system and user activity logs for internal threat indicators.</li>
-            <li>Validate external network ability/reason for access.</li>
-          </ol>
-        </details>
+    <div class="step-question">Local Logon Type?</div>
+    <div class="step-answer">
+      <p><strong>Yes:</strong></p>
+      <ul>
+        <li>Check for repeated failed logins from the same workstation.</li>
+        <li>Contact system owner, AO help-desk, or section.</li>
+        <li>Verify if the user recently changed passwords or had lockouts.</li>
+        <li>Identify reason for failed logins.</li>
+      </ul>
 
-        <details>
-          <summary><strong>No:</strong></summary>
-          <details>
-            <summary><strong>Happen across multiple machines?</strong></summary>
-            <details>
-              <summary><strong>Yes:</strong></summary>
-              <ol>
-                <li>Determine if malicious application caused failure</li>
-                <li>Determine if network or application authentication caused failures.</li>
-                <li>Determin if successful login occurred.</li>
-              </ol>
-            </details>
+      <p><strong>No:</strong></p>
+    </div>
 
-          <details>
-            <summary><strong>No:</strong></summary>
-            <details>
-              <summary><strong>Is this an incident?</strong></summary>
-              <details>
-                <summary><strong>Yes:</strong></summary>
-                <ol>
-                  <li>Gather artifacts (logs, affected hosts, malicious application, source IP address(es))</li>
-                  <li>Prepare cyber 9-line.</li>
-                  <li>Senior CND analyst review.</li>
-                </ol>
-              </details>
+    <div class="step-question">From a trusted network?</div>
+    <div class="step-answer">
+      <p><strong>Yes:</strong></p>
+      <ul>
+        <li>Contact network owner and identify reason for activity.</li>
+        <li>Review system and user activity logs for internal threat indicators.</li>
+        <li>Validate external network ability/reason for access.</li>
+      </ul>
 
-          <details>
-            <summary><strong>No:</strong></summary>
-              <ol>
-                <li>Senior CND analyst review.</li>
-                <li>Determine false positives and eliminate them.</li>
-              </ol>
-          </details>
-                  </details>
-                </details>
-              </details>
-            </details>
-          </details>
-        </details>
-      </details>
-    </details>
-  </details>
-</section>
+      <p><strong>No:</strong></p>
+    </div>
+
+    <div class="step-question">Happen across multiple machines?</div>
+    <div class="step-answer">
+      <p><strong>Yes:</strong></p>
+      <ul>
+        <li>Determine if malicious application caused failure.</li>
+        <li>Determine if network or application authentication caused failures.</li>
+        <li>Determine if successful login occurred.</li>
+      </ul>
+
+      <p><strong>No:</strong></p>
+    </div>
+
+    <div class="step-question">Is this an incident?</div>
+    <div class="step-answer">
+      <p><strong>Yes:</strong></p>
+      <ul>
+        <li>Gather artifacts (logs, affected hosts, malicious application, source IP address(es)).</li>
+        <li>Prepare cyber 9-line.</li>
+        <li>Senior CND analyst review.</li>
+      </ul>
+
+      <p><strong>No:</strong></p>
+      <ul>
+        <li>Senior CND analyst review.</li>
+        <li>Determine false positives and eliminate them.</li>
+      </ul>
+    </div>
+
+  </div>
 
 
     <!-- Tools & Queries -->
