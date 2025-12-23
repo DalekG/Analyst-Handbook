@@ -52,7 +52,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Abnormal Amount of Failed Logins</h3>
+      <h4>Abnormal Amount of Failed Logins</h4>
 
       <h4>Identify the Targeted Account(s)</h4>
       <ul>
@@ -137,15 +137,68 @@
     </section>
 
     <section id="tools-queries">
-      <h2>Tools & Queries</h2>
-      <ul>
-        <li>Elastic</li>
-          <li>user.name : joe.duffy and event.code : 4624</li>
-        <li>Elastic Discover for authentication event analysis</li>
-        <li>Threat intelligence platforms (IP reputation, ASN lookup)</li>
-        <li>Identity provider logs (AD, Azure AD, Okta, etc.)</li>
-      </ul>
-    </section>
+  <h2>Tools &amp; Queries</h2>
+
+  <h4>Elastic</h4>
+  <p><strong>Purpose:</strong> Identify abnormal failed login activity for a single user account.</p>
+
+  <p><strong>KQL – Failed Logins for a Single User</strong></p>
+  <pre><code>event.category:authentication and
+event.outcome:failure and
+user.name:"&lt;USERNAME&gt;"</code></pre>
+
+  <p><strong>KQL – Failed Logins Followed by a Success</strong></p>
+  <pre><code>event.category:authentication and
+user.name:"&lt;USERNAME&gt;" and
+(event.outcome:failure or event.outcome:success)</code></pre>
+
+  <p><strong>KQL – Failed Logins from Multiple Source IPs</strong></p>
+  <pre><code>event.category:authentication and
+event.outcome:failure and
+user.name:"&lt;USERNAME&gt;" and
+source.ip:*</code></pre>
+
+  <p><strong>ES|QL – Failure Volume Over Time</strong></p>
+  <pre><code>FROM logs-*
+| WHERE event.category == "authentication"
+  AND event.outcome == "failure"
+  AND user.name == "&lt;USERNAME&gt;"
+| STATS failure_count = COUNT() BY DATE_TRUNC(15 minutes, @timestamp)
+| SORT failure_count DESC</code></pre>
+
+  <h4>Linux</h4>
+  <p><strong>Purpose:</strong> Review authentication failures for a specific user on Linux systems.</p>
+
+  <p><strong>Failed SSH/Login Attempts</strong></p>
+  <pre><code>grep "Failed password" /var/log/auth.log | grep "&lt;username&gt;"</code></pre>
+
+  <p><strong>All Authentication Failures for User</strong></p>
+  <pre><code>grep "&lt;username&gt;" /var/log/auth.log | grep -i fail</code></pre>
+
+  <p><strong>Count Failed Attempts</strong></p>
+  <pre><code>grep "Failed password" /var/log/auth.log | grep "&lt;username&gt;" | wc -l</code></pre>
+
+  <p><strong>Identify Source IPs</strong></p>
+  <pre><code>grep "Failed password" /var/log/auth.log | grep "&lt;username&gt;" | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr</code></pre>
+
+  <h4>Windows</h4>
+  <p><strong>Purpose:</strong> Review failed authentication attempts against a specific account.</p>
+
+  <p><strong>PowerShell – Failed Logons (Event ID 4625)</strong></p>
+  <pre><code>Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} |
+Where-Object {$_.Properties[5].Value -eq "&lt;USERNAME&gt;"} |
+Select TimeCreated, @{Name="SourceIP";Expression={$_.Properties[19].Value}}</code></pre>
+
+  <p><strong>PowerShell – Failed Then Successful Logons</strong></p>
+  <pre><code>Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625,4624} |
+Where-Object {$_.Properties[5].Value -eq "&lt;USERNAME&gt;"} |
+Select TimeCreated, Id</code></pre>
+
+  <p><strong>Command Line – Quick Failure Count</strong></p>
+  <pre><code>wevtutil qe Security /q:"*[System[(EventID=4625)]]" /f:text | find "&lt;USERNAME&gt;" /c</code></pre>
+
+</section>
+
 
     <section id="response-workflow">
       <h2>Response Workflow</h2>
