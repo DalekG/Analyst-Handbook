@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DNS Enumeration – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>DNS Enumeration</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        This use case focuses on identifying and investigating DNS enumeration activity.
+        DNS enumeration is commonly used during reconnaissance to map internal infrastructure,
+        identify hosts and services, and support follow-on attacks such as lateral movement,
+        credential theft, or command-and-control establishment.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries perform DNS enumeration to discover domain structure, subdomains,
+        hostnames, and services. Enumeration may be performed using automated tools,
+        scripts, or malware and can target internal or external DNS infrastructure.
+      </p>
+      <ul>
+        <li>Internal reconnaissance for lateral movement</li>
+        <li>External scanning of exposed DNS records</li>
+        <li>Malware attempting to discover internal services</li>
+        <li>Preparation for phishing, exploitation, or C2 communications</li>
+      </ul>
+    </section>
+
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>Unusually high volume of DNS queries from a single source</li>
+        <li>Sequential or dictionary-style DNS queries</li>
+        <li>Queries for non-existent subdomains (NXDOMAIN responses)</li>
+        <li>Requests targeting internal-only domains</li>
+        <li>DNS activity originating from unexpected systems or users</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>DNS Enumeration</h3>
+
+      <p><strong>Check alerts for unusual amount of DNS-related alerts</strong></p>
+      <p><strong>Review Zeek DNS logs to determine what was enumerated</strong></p>
+
+      <h4>Identify the Source</h4>
+      <ul>
+        <li>
+          <strong>Internal source</strong>
+          <ul>
+            <li>Verify asset legitimacy</li>
+            <li>Determine whether activity originated from an automated tool or script</li>
+            <li>Review recent user activity on the system</li>
+            <li>Interview the user or system owner if necessary</li>
+          </ul>
+        </li>
+        <li>
+          <strong>External source</strong>
+          <ul>
+            <li>Block the source at the network perimeter immediately</li>
+            <li>Check threat intelligence for known scanners or malicious infrastructure</li>
+            <li>Review firewall logs for additional activity from the same source</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Analyze Enumeration Pattern</h4>
+      <ul>
+        <li>
+          <strong>What domains are being queried?</strong>
+          <ul>
+            <li>Internal domains only: Possible reconnaissance for lateral movement</li>
+            <li>External domains: May be benign or related to malware C2</li>
+            <li>Mix of internal and external domains: Higher concern; map all queried domains</li>
+          </ul>
+        </li>
+        <li>
+          <strong>What is the query volume?</strong>
+          <ul>
+            <li>Hundreds or thousands of queries: Likely automated scanning</li>
+            <li>Dozens of queries: Targeted reconnaissance</li>
+            <li>Pattern recognition: Identify dictionary attacks or zone transfer attempts</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Was Sensitive Information Exposed?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Document what internal structure or host information was revealed</li>
+            <li>Review DNS server logs for signs of data leakage</li>
+            <li>Assess potential impact of the exposed information</li>
+            <li>Request senior analyst review for potential damage assessment</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Proceed to the next step</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Is This Authorized Activity?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Verify authorization and scheduled activity (vulnerability scan, inventory, tooling)</li>
+            <li>Document the activity and source system</li>
+            <li>Update whitelist if activity is recurring</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Check for additional reconnaissance activity (port scans, directory brute force)</li>
+            <li>Review the source system for compromise indicators</li>
+            <li>Escalate if DNS enumeration is combined with other suspicious behavior</li>
+            <li>Consider blocking the source if external</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Elastic Security (DNS, Zeek, network flow data)</li>
+        <li>Zeek DNS logs</li>
+        <li>Firewall and perimeter logs</li>
+        <li>Threat intelligence platforms</li>
+        <li>Asset inventory and CMDB</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Confirm whether DNS activity is authorized or malicious</li>
+        <li>Block confirmed malicious sources at the network perimeter</li>
+        <li>Investigate source systems for compromise when internal</li>
+        <li>Engage Incident Response if enumeration indicates active reconnaissance</li>
+        <li>Document findings, impact, and remediation actions</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – Reconnaissance</li>
+        <li>MITRE ATT&CK – Discovery</li>
+        <li>NIST SP 800-92 – Guide to Computer Security Log Management</li>
+        <li>Internal SOC Playbooks and IR Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

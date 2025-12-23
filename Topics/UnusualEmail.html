@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unusual Email – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unusual Email</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        This use case focuses on identifying and investigating email messages that exhibit
+        unusual, suspicious, or potentially malicious characteristics. Unusual emails may
+        be part of phishing campaigns, malware delivery, credential harvesting, or social
+        engineering attempts.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Email remains a primary initial access vector for adversaries. Malicious emails may
+        contain links, attachments, or social engineering content designed to deceive users
+        into interacting with malicious infrastructure or executing malware.
+      </p>
+      <ul>
+        <li>Phishing and spear-phishing attempts</li>
+        <li>Malware delivery via attachments</li>
+        <li>Credential harvesting via malicious URLs</li>
+        <li>Business Email Compromise (BEC)</li>
+        <li>Social engineering and pretexting</li>
+      </ul>
+    </section>
+
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>Unexpected sender or spoofed display name</li>
+        <li>Suspicious sender domain or reply-to address</li>
+        <li>Urgent or coercive language</li>
+        <li>Unexpected attachments or embedded URLs</li>
+        <li>Email failing SPF, DKIM, or DMARC checks</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Unusual Email</h3>
+
+      <h4>Initial Email Analysis</h4>
+      <ul>
+        <li>Review email headers for anomalies (SPF, DKIM, DMARC results)</li>
+        <li>Inspect sender domain and compare against known legitimate domains</li>
+        <li>Perform domain reputation and WHOIS lookup</li>
+        <li>Perform IP reputation and geolocation lookup on sending infrastructure</li>
+        <li>Review email body for social engineering indicators</li>
+      </ul>
+
+      <h4>Contains URL or Attachment?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Analyze URL using VirusTotal or other approved analysis tools</li>
+            <li>Compute hash of attachment (MD5/SHA256)</li>
+            <li>Submit attachment hash to VirusTotal or other approved tools</li>
+            <li>Do not open or execute attachments directly</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Request senior CND analyst review</li>
+            <li>Notify and thank the reporting user</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Malicious URL?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Verify that the user did not click the URL</li>
+            <li>Collect all relevant artifacts (URL, headers, sender, timestamps)</li>
+            <li>Prepare a cyber 9-line report</li>
+            <li>Request senior CND analyst review</li>
+            <li>Escalate the incident</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Request senior CND analyst review</li>
+            <li>Notify and thank the reporting user</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Malicious Attachment Hash?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Verify that the attachment was not downloaded or opened</li>
+            <li>Collect all relevant artifacts (hashes, filename, headers)</li>
+            <li>Prepare a cyber 9-line report</li>
+            <li>Request senior CND analyst review</li>
+            <li>Escalate the incident</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Request senior CND analyst review</li>
+            <li>Notify and thank the reporting user</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Email security gateway and mail logs</li>
+        <li>Email header analysis tools</li>
+        <li>VirusTotal and approved malware analysis platforms</li>
+        <li>Domain and IP reputation services</li>
+        <li>Endpoint detection and response (EDR)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Determine whether email is malicious or benign</li>
+        <li>Contain malicious emails through blocking or quarantine</li>
+        <li>Verify user interaction and assess impact</li>
+        <li>Escalate confirmed incidents to Incident Response</li>
+        <li>Document findings and notify stakeholders</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – Phishing (Initial Access)</li>
+        <li>MITRE ATT&CK – User Execution</li>
+        <li>NIST SP 800-177 – Trustworthy Email</li>
+        <li>Internal SOC and CND Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

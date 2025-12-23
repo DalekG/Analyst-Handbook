@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unknown Network Traffic – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unknown Network Traffic</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        This use case addresses the detection and investigation of network traffic that does not
+        immediately align with known, expected, or documented behavior within the environment.
+        Unknown traffic may indicate benign misconfigurations, new applications, or malicious
+        activity such as command-and-control (C2), data exfiltration, or reconnaissance.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries frequently leverage unfamiliar protocols, uncommon ports, or unexpected
+        destinations to evade detection. Unknown network traffic may be associated with:
+      </p>
+      <ul>
+        <li>Command-and-control communications</li>
+        <li>Data exfiltration over non-standard channels</li>
+        <li>Lateral movement using uncommon protocols</li>
+        <li>Unauthorized remote access tools or backdoors</li>
+        <li>Reconnaissance or beaconing activity</li>
+      </ul>
+    </section>
+
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>Traffic using unfamiliar or non-standard protocols</li>
+        <li>Connections over unexpected or high-numbered ports</li>
+        <li>Encrypted traffic with unknown or suspicious certificates</li>
+        <li>Unexpected outbound connections to external IPs or domains</li>
+        <li>Persistent or periodic traffic with no clear business purpose</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Unknown Traffic</h3>
+
+      <h4>Identify Traffic Characteristics</h4>
+      <ul>
+        <li>
+          <strong>What protocol is being used?</strong>
+          <ul>
+            <li>Standard protocols (HTTP, HTTPS, DNS, SMB): Review legitimacy</li>
+            <li>Non-standard or custom protocols: Flag for deeper analysis</li>
+            <li>Encrypted traffic: Note encryption method and certificate details</li>
+          </ul>
+        </li>
+        <li>
+          <strong>What ports are involved?</strong>
+          <ul>
+            <li>Standard ports: Verify expected service</li>
+            <li>Non-standard ports: Investigate purpose</li>
+            <li>High-numbered ports: Check for potential backdoor</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Identify Source and Destination</h4>
+      <ul>
+        <li>
+          <strong>Is the source internal?</strong>
+          <ul>
+            <li>Identify asset and owner</li>
+            <li>Check asset baseline behavior</li>
+            <li>Review recent changes to the system</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Is the destination internal?</strong>
+          <ul>
+            <li>Verify destination is an authorized service</li>
+            <li>Confirm the destination should accept this traffic</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Is the destination external?</strong>
+          <ul>
+            <li>Check reputation of external IP or domain</li>
+            <li>Review threat intelligence feeds</li>
+            <li>Identify geolocation and hosting provider</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Is This Traffic Authorized?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Document business justification</li>
+            <li>Update asset inventory and behavioral baseline</li>
+            <li>Create an exception if traffic is recurring</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Check volume and frequency of traffic</li>
+            <li>Analyze payload if possible</li>
+            <li>Determine if activity resembles data exfiltration, C2, or reconnaissance</li>
+            <li>Block traffic at the firewall</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Does the Traffic Show Malicious Indicators?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Isolate affected system(s)</li>
+            <li>Capture full PCAP if possible</li>
+            <li>Escalate to Incident Response</li>
+            <li>Begin containment procedures</li>
+            <li>Block traffic at the firewall</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No, but suspicious</strong>
+          <ul>
+            <li>Request senior analyst review</li>
+            <li>Continue enhanced monitoring</li>
+            <li>Consider blocking at firewall or proxy</li>
+            <li>Document activity for pattern analysis</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Elastic Security (network, flow, proxy, and endpoint telemetry)</li>
+        <li>Firewall and proxy logs</li>
+        <li>Packet capture tools (tcpdump, Wireshark)</li>
+        <li>Threat intelligence platforms</li>
+        <li>Asset inventory and CMDB</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Validate whether traffic is authorized or malicious</li>
+        <li>Contain or block confirmed malicious traffic</li>
+        <li>Isolate impacted assets when required</li>
+        <li>Engage Incident Response for confirmed threats</li>
+        <li>Document findings, decisions, and actions taken</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – Command and Control</li>
+        <li>MITRE ATT&CK – Exfiltration</li>
+        <li>NIST SP 800-92 – Guide to Computer Security Log Management</li>
+        <li>Internal SOC Playbooks and IR Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>
