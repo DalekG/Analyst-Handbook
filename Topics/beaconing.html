@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Beaconing Activity – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Beaconing Activity</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Beaconing is the process by which an infected system periodically "checks in" with an
+        attacker-controlled Command and Control (C2) server. As of 2025, modern malware often
+        utilizes "jitter" (randomized timing) and encrypted tunnels (HTTPS, DoH) to blend into
+        standard web traffic and evade legacy detection systems.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries use beacons to receive instructions, maintain persistence, and signal readiness
+        for the next stage of an attack. Common techniques include:
+      </p>
+      <ul>
+        <li><strong>Fixed Beacons:</strong> Heartbeats at exact intervals (e.g., every 60 seconds).</li>
+        <li><strong>Jittered Beacons:</strong> Intervals with randomized delays to break pattern recognition.</li>
+        <li><strong>Protocol Tunneling:</strong> Hiding commands in DNS queries or ICMP packets.</li>
+        <li><strong>Dormant Beacons:</strong> Long-tail check-ins (e.g., once every 24 hours) to avoid discovery.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Beacon Characteristics</h3>
+      <h4>Timing pattern:</h4>
+      <ul>
+        <li><strong>Fixed Interval:</strong> Classic, automated C2 beacon behavior.</li>
+        <li><strong>Jittered Interval:</strong> Indicates more sophisticated malware (e.g., Cobalt Strike, Sliver).</li>
+        <li><strong>Time-Based:</strong> Hourly or daily check-ins may indicate a scheduled task or cron job.</li>
+        <li><strong>Event-Based:</strong> Activity triggered by user login or specific application launches.</li>
+      </ul>
+
+      <h4>Communication details:</h4>
+      <ul>
+        <li>Identify the destination IP/Domain, Port (e.g., 443, 8080), and Protocol.</li>
+        <li>Check for packet size consistency (beacons often have identical sizes for each request).</li>
+        <li>Analyze request/response headers (check for unusual User-Agents or non-standard fields).</li>
+        <li>Verify if encryption is present and if the SSL certificate is self-signed or from a rare CA.</li>
+      </ul>
+
+      <h3>Identify Infected System</h3>
+      <h4>Source system identification:</h4>
+      <ul>
+        <li>Retrieve the Hostname, IP, System Owner, and Department.</li>
+        <li>Assess system criticality (e.g., Executive workstation vs. DMZ server).</li>
+        <li>Check current OS and patch levels for known vulnerabilities.</li>
+      </ul>
+
+      <h4>Current state:</h4>
+      <ul>
+        <li>Is the system currently online and accessible?</li>
+        <li>Is a user currently logged in (possible "Hands-on-Keyboard" activity)?</li>
+        <li>Review any recent software installs or configuration changes.</li>
+      </ul>
+
+      <h3>Analyze Beacon Destination</h3>
+      <ul>
+        <li><strong>Threat Intelligence:</strong> Check VirusTotal, AlienVault, or Cisco Talos.</li>
+        <li><strong>Domain Analysis:</strong> Review WHOIS data; focus on <strong>Domain Age</strong> (newly registered domains are high risk).</li>
+        <li><strong>Hosting Provider:</strong> Is the destination a known bulletproof host or a common VPS (DigitalOcean, Linode)?</li>
+        <li><strong>Malware Match:</strong> Attempt to match the pattern to known families (e.g., Metasploit, Emotet, Qakbot).</li>
+      </ul>
+
+      <h3>Capture and Analyze Traffic</h3>
+      <ul>
+        <li><strong>Capture PCAP:</strong> If safe, capture full packet data to analyze unencrypted payloads.</li>
+        <li><strong>Extract IOCs:</strong> Document IP addresses, domains, and URI paths found in the traffic.</li>
+        <li><strong>DO NOT Capture IF:</strong> It would alert a sophisticated attacker (e.g., interacting with a live web shell) or if the system is too critical for packet mirroring overhead.</li>
+      </ul>
+
+      <h3>Execute Containment</h3>
+      <ul>
+        <li><strong>Isolate the System:</strong> Disconnect from the network via switch port disable or EDR isolation.</li>
+        <li><strong>Block Destination:</strong> Implement an immediate block on the beacon IP/Domain at the firewall and proxy.</li>
+        <li><strong>Preserve Evidence:</strong> <strong>Do not shut down the system.</strong> Capture a memory dump first, then image the disk.</li>
+        <li><strong>Isolate Segment:</strong> If multiple systems show the same beacon, isolate the entire VLAN.</li>
+      </ul>
+
+      <h3>Investigate Scope and Impact</h3>
+      <ul>
+        <li><strong>Lateral Movement:</strong> Review authentication logs (Event ID 4624) for spread from the infected host.</li>
+        <li><strong>Data Access:</strong> Review file access logs and check for "Staging" (compressed archives in Temp folders).</li>
+        <li><strong>Hunt:</strong> Search for the same beacon pattern/destination across the entire environment.</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Zeek / Corelight (for protocol and flow analysis)</li>
+        <li>Wireshark / tcpdump (for packet inspection)</li>
+        <li>RITA (Real Intelligence Threat Analytics) for beacon detection</li>
+        <li>SIEM Query: <code>stats count by dest_ip, interval_time | where count > 50</code></li>
+        <li>EDR Process Tree (to find the process initiating the network connection)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Isolate the host and block C2 infrastructure globally.</li>
+        <li>Perform memory forensics to identify the malicious process or injected thread.</li>
+        <li>Reset all credentials used on the infected host during the beaconing window.</li>
+        <li><strong>Escalate to IR</strong> for full malware analysis and remediation.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1071 (Application Layer Protocol: Web Protocols)</li>
+        <li>MITRE ATT&CK – T1571 (Non-Standard Port)</li>
+        <li>NIST SP 800-61 Rev. 2 – Computer Security Incident Handling Guide</li>
+        <li>SANS Institute – Detect Beaconing with Network Traffic Analysis</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

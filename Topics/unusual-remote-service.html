@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unusual Remote Service Activity – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unusual Remote Service Activity</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Remote services are primary targets for adversaries seeking to gain initial access or move laterally
+        within a network. This workflow provides a structured approach to auditing remote connections to
+        ensure they are authorized, originate from trusted sources, and utilize approved protocols.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries leverage remote services to bypass physical security and execute commands on internal
+        assets. Common malicious patterns include:
+      </p>
+      <ul>
+        <li><strong>Brute Force/Password Spraying:</strong> Rapid failed login attempts followed by a success.</li>
+        <li><strong>Lateral Movement:</strong> Using compromised credentials to RDP or SSH into high-value targets.</li>
+        <li><strong>Living-off-the-Land:</strong> Misusing legitimate tools like PowerShell Remoting (WinRM) to execute scripts.</li>
+        <li><strong>Unauthorized Remote Access Tools (RATs):</strong> Using unapproved software (e.g., AnyDesk, TeamViewer) to bypass corporate VPNs.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Service and Protocol</h3>
+      <h4>What remote service is being used?</h4>
+      <ul>
+        <li><strong>RDP:</strong> Check session details, resolution, and redirected resources.</li>
+        <li><strong>SSH:</strong> Review authentication methods (Password vs. Public Key).</li>
+        <li><strong>VNC:</strong> Verify if this is an authorized support tool for the specific asset.</li>
+        <li><strong>Remote PowerShell/WinRM:</strong> Audit the specific commands and scripts executed.</li>
+        <li><strong>Third-party Remote Tools:</strong> Verify against the approved software list (e.g., LogMeIn, ScreenConnect).</li>
+      </ul>
+
+      <h3>Identify Source and Target</h3>
+      <h4>Source of Connection:</h4>
+      <ul>
+        <li><strong>Internal:</strong> Identify the source system and the logged-in user.</li>
+        <li><strong>External:</strong> Check the IP reputation, geolocation, and VPN status.</li>
+        <li><strong>Known Admin Workstation:</strong> Lower concern, but still requires verification of the user.</li>
+        <li><strong>Unexpected Source:</strong> High concern; investigate the source asset for compromise.</li>
+      </ul>
+
+      <h4>Target System:</h4>
+      <ul>
+        <li><strong>Critical Server:</strong> (Domain Controllers, SQL, Backup) Immediate review required.</li>
+        <li><strong>Standard Workstation:</strong> Standard review; check for peer-to-peer (P2P) RDP.</li>
+        <li><strong>Multiple Targets:</strong> High probability of lateral movement or internal reconnaissance.</li>
+      </ul>
+
+      <h3>Analyze Connection Characteristics</h3>
+      <h4>Timing:</h4>
+      <ul>
+        <li><strong>Business Hours:</strong> More likely legitimate; verify via change tickets.</li>
+        <li><strong>After Hours:</strong> Verify against on-call schedules or authorized maintenance windows.</li>
+        <li><strong>Middle of Night:</strong> High suspicion; requires immediate verification.</li>
+      </ul>
+
+      <h4>User Account:</h4>
+      <ul>
+        <li><strong>Known Administrator:</strong> Verify directly with the admin (via phone/IM, not email).</li>
+        <li><strong>Service Account:</strong> Check if remote login is expected for this specific service.</li>
+        <li><strong>Standard User:</strong> Highly unusual for remote admin access; flag for review.</li>
+        <li><strong>Disabled or Dormant Account:</strong> <strong>Immediate escalation;</strong> indicates credential theft.</li>
+      </ul>
+
+      <h3>Is this Authorized Activity?</h3>
+      <ul>
+        <li>
+          <strong>Yes (Verified ticket, maintenance, or approved remote work):</strong>
+          <ul>
+            <li>Document the business justification and ticket number.</li>
+            <li>Verify all activity performed during the session was within scope.</li>
+            <li>Close the alert.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No:</strong>
+          <ul>
+            <li><strong>Terminate the session immediately</strong> if still active.</li>
+            <li>Review all commands, scripts, and file actions performed during the session.</li>
+            <li>Check for privilege escalation attempts or modifications to security settings.</li>
+            <li>Audit for signs of data access or exfiltration.</li>
+            <li><strong>Escalate to Incident Response (IR).</strong></li>
+            <li>Reset credentials used for the connection immediately.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Windows Event Logs (Security: 4624/4625, RemoteConnectionManager: 1149)</li>
+        <li>SSH Logs (<code>/var/log/auth.log</code> or <code>/var/log/secure</code>)</li>
+        <li>VPN Access Logs &amp; MFA Logs (Duo, Okta, Azure MFA)</li>
+        <li>EDR Process Trees (to see what was launched via the remote session)</li>
+        <li>SIEM Search: <code>sourcetype="WinEventLog" EventCode=4624 Logon_Type=10</code> (RDP)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Kill active unauthorized remote sessions.</li>
+        <li>Disable the compromised user account and initiate a password reset.</li>
+        <li>Isolate the source and target systems for forensic imaging.</li>
+        <li>Update firewall or Conditional Access rules to restrict remote service access.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1021 (Remote Services)</li>
+        <li>MITRE ATT&CK – T1133 (External Remote Services)</li>
+        <li>CIS Controls – Control 12: Network Infrastructure Management</li>
+        <li>Internal Remote Access & VPN Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Compromise – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Account Compromise</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Account compromise occurs when an unauthorized individual gains access to a legitimate user's credentials.
+        This is a high-priority event as it allows adversaries to bypass the perimeter and act with the
+        authority of the compromised user, often leading to data theft, lateral movement, or financial fraud.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Compromise typically results from phishing, credential stuffing, password spraying, or session hijacking.
+        Once inside, attackers often:
+      </p>
+      <ul>
+        <li>Modify mailbox rules to hide communication</li>
+        <li>Enroll unauthorized MFA devices for persistence</li>
+        <li>Access sensitive documents in SharePoint or OneDrive</li>
+        <li>Use the account to launch internal phishing attacks against other employees</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Compromise Indicators</h3>
+      <h4>What triggered the alert?</h4>
+      <ul>
+        <li>Unusual login location (Geo-proximity) or anomalous time</li>
+        <li><strong>Impossible Travel:</strong> Logins from distant locations in an impossible timeframe</li>
+        <li>Successful login following a known <strong>Credential Dump</strong> event</li>
+        <li>Successful login following a <strong>Brute Force</strong> or Password Spraying attempt</li>
+        <li>Suspicious activity post-authentication (e.g., mass file downloads)</li>
+        <li>Direct report from the user regarding unauthorized access or locked account</li>
+      </ul>
+
+      <h3>Verify Compromise</h3>
+      <h4>Check account activity:</h4>
+      <ul>
+        <li>Review recent login times and IP sources</li>
+        <li>Analyze failed login attempts (pattern of failure before success)</li>
+        <li>Check for recent password changes or self-service resets</li>
+        <li><strong>MFA Status:</strong> Review changes to MFA methods or high volumes of "Denied" prompts</li>
+        <li>Review mailbox rules (e.g., rules to move items to "Deleted Items" or external forwarding)</li>
+        <li>Review file access patterns (unusual access to PII or Intellectual Property)</li>
+        <li>Check for any privileged actions performed (e.g., global admin changes)</li>
+      </ul>
+
+      <h4>Contact Account Owner:</h4>
+      <ul>
+        <li>Verify recent activity was legitimate via phone or secure IM</li>
+        <li>Confirm their physical location matches the logs</li>
+        <li>Inquire about unexpected password reset or MFA notification emails</li>
+        <li>Ask if they have shared credentials or entered them into any suspicious portals</li>
+      </ul>
+
+      <h3>Is the account actually compromised?</h3>
+      <ul>
+        <li>
+          <strong>Yes or Likely:</strong>
+          <ul>
+            <li>Proceed immediately to Response Workflow</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Unclear:</strong>
+          <ul>
+            <li>Request Senior Analyst review</li>
+            <li>Enable enhanced auditing/monitoring on the account</li>
+            <li>Prepare for rapid isolation if confirmation is received</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No (False Positive):</strong>
+          <ul>
+            <li>Document the reason (e.g., Authorized VPN use, user on travel)</li>
+            <li>Tune the alert logic if necessary</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Execute Immediate Response</h3>
+      <ul>
+        <li><strong>Disable the account immediately</strong> in AD / Azure AD</li>
+        <li>Terminate all active sessions (Revoke Refresh Tokens)</li>
+        <li>Reset the password (<strong>Note:</strong> Do not send the new password to the compromised email)</li>
+        <li><strong>Review and remove persistence mechanisms:</strong>
+          <ul>
+            <li>Email forwarding rules and mailbox delegations</li>
+            <li>Unauthorized OAuth app tokens and permissions</li>
+            <li>Saved passwords in browser or cloud vaults</li>
+            <li>Newly enrolled MFA devices</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Assess Damage and Scope</h3>
+      <h4>What data was accessed?</h4>
+      <ul>
+        <li>Sensitive/Classified information or Intellectual Property</li>
+        <li>PII, financial data, or customer information (GDPR/HIPAA impact)</li>
+      </ul>
+
+      <h4>What systems were accessed?</h4>
+      <ul>
+        <li>Document every system/SaaS app logged into during the compromise window</li>
+        <li>Check for lateral movement to other internal assets</li>
+        <li>Verify no additional accounts were compromised by this user</li>
+      </ul>
+
+      <h4>What actions were taken?</h4>
+      <ul>
+        <li>Modifications to security settings or logging configurations</li>
+        <li>Installation of unauthorized software or scripts</li>
+        <li>Creation of additional persistence accounts</li>
+        <li>Evidence of data exfiltration (outbound traffic volume)</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Azure AD Sign-in Logs / Risky Users Report</li>
+        <li>Microsoft 365 Unified Audit Log (UAL)</li>
+        <li>SIEM Search: <code>EventCode=4624</code> (Logon) and <code>EventCode=4723/4724</code> (Password Change)</li>
+        <li>MFA Provider Dashboard (Okta, Duo, Azure MFA)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li><strong>Escalate to IR</strong> with a full impact assessment report</li>
+        <li>Begin official Incident Response procedures and evidence preservation</li>
+        <li>Notify relevant stakeholders (Legal, HR, Privacy) per the IR plan</li>
+        <li>Initiate a threat hunt for similar indicators across the environment</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1078 (Valid Accounts)</li>
+        <li>MITRE ATT&CK – T1566 (Phishing)</li>
+        <li>NIST SP 800-63 – Digital Identity Guidelines</li>
+        <li>Internal Employee Onboarding/Termination & Password Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dormant Account Reactivation – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Dormant Account Reactivation</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Dormant accounts (those inactive for an extended period) are prime targets for adversaries.
+        When reactivated outside of normal business processes, it is a significant indicator of
+        account manipulation designed to provide a persistent, stealthy foothold within the environment.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Attackers leverage dormant accounts because they often go unmonitored and may still
+        retain high-level permissions. Tactics include:
+      </p>
+      <ul>
+        <li>Gaining access via a separate breach and reactivating an old, forgotten account.</li>
+        <li>Social engineering helpdesk staff to reactivate a former employee's account.</li>
+        <li>Using compromised administrative credentials to re-enable an account and immediately change its password.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Account Details</h3>
+      <h4>Type of account:</h4>
+      <ul>
+        <li><strong>User Account:</strong> Check current employee status with HR (leave of absence, termination date).</li>
+        <li><strong>Service Account:</strong> Verify if the associated service is still needed or operational.</li>
+        <li><strong>Administrative Account:</strong> High concern; these accounts should rarely be dormant.</li>
+        <li><strong>Vendor/Contractor Account:</strong> Check current contract status and end date.</li>
+      </ul>
+
+      <h4>How long was the account dormant?</h4>
+      <ul>
+        <li>Days: Lower concern; may be a simple oversight.</li>
+        <li>Weeks: Moderate concern.</li>
+        <li>Months/Years: High concern; suggests a targeted use of a forgotten asset.</li>
+      </ul>
+
+      <h4>What are the account privileges?</h4>
+      <ul>
+        <li><strong>Standard User:</strong> Lower risk, but still requires investigation.</li>
+        <li><strong>Elevated Privileges:</strong> High risk; immediate review needed.</li>
+        <li><strong>Administrative/Root:</strong> Critical concern; assumes malicious intent until proven otherwise.</li>
+      </ul>
+
+      <h3>Identify Reactivation Details</h3>
+      <h4>Who/what reactivated the account?</h4>
+      <ul>
+        <li><strong>HR System:</strong> Verify via HR processes/tickets.</li>
+        <li><strong>Administrator:</strong> Verify directly with the specific administrator (phone/IM).</li>
+        <li><strong>Automated Process:</strong> Check the legitimacy and configuration of the automation script.</li>
+        <li><strong>Unknown:</strong> Investigate the source of the re-enable command immediately.</li>
+      </ul>
+
+      <h4>Authentication method post-reactivation:</h4>
+      <ul>
+        <li><strong>Password:</strong> When was the password last changed? If it was changed right before use, suspicion increases.</li>
+        <li><strong>Cached Credentials:</strong> How were old, cached credentials obtained and used?</li>
+        <li><strong>Service Authentication:</strong> Verify the legitimacy of the service making the API calls.</li>
+      </ul>
+
+      <h3>Review Account Activity Since Reactivation</h3>
+      <h4>What has the account done?</h4>
+      <ul>
+        <li>Review all login locations and times (look for impossible travel).</li>
+        <li>Document systems accessed and network connections made.</li>
+        <li>Note files accessed or modified (especially sensitive data).</li>
+        <li>Audit commands or scripts executed via the session.</li>
+        <li>Verify usage of privileges—did the account attempt to elevate further?</li>
+      </ul>
+
+      <h3>Is the Reactivation Legitimate?</h3>
+      <ul>
+        <li>
+          <strong>Yes (Employee return, contract extension, service reactivation):</strong>
+          <ul>
+            <li>Verify with the appropriate department (HR/Procurement/IT).</li>
+            <li>Confirm proper reactivation procedures were followed (e.g., password forced reset).</li>
+            <li>Verify current access needs match the assigned privileges (Least Privilege).</li>
+            <li>Document findings and close the alert.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No or Cannot Verify:</strong>
+          <ul>
+            <li><strong>Disable the account immediately.</strong></li>
+            <li>Force an immediate password reset (do not use the email associated with the account).</li>
+            <li>Review all activity for malicious actions or lateral movement.</li>
+            <li>Check for how the account credentials were obtained or leveraged.</li>
+            <li><strong>Escalate to IR if compromise is indicated.</strong></li>
+            <li>Investigate who/what had access to reactivate the account (internal threat?).</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Active Directory/Azure AD Audit Logs (Event ID 4722/4723/4724 - Enable/Disable/Password Change)</li>
+        <li>HR Management System Logs (Workday, SAP)</li>
+        <li>SIEM Search: Filter for status <code>disabled=false</code> or <code>enabled=true</code> changes.</li>
+        <li>EDR Logs (Process execution and file access logs for post-reactivation activity)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Disable the account and invalidate session tokens if unauthorized.</li>
+        <li>Engage IR procedures if data access or system compromise is confirmed.</li>
+        <li>Remediate the administrative weakness that allowed unauthorized reactivation.</li>
+        <li>Update identity and access management policies regarding dormant account lifecycle.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1098.002 (Account Manipulation: Disable or Modify Account)</li>
+        <li>NIST SP 800-63B – Digital Identity Guidelines</li>
+        <li>Internal Identity and Access Management (IAM) Policy</li>
+        <li>Employee Termination and Offboarding Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

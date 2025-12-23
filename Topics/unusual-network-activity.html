@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unusual Network Activity – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unusual Network Activity</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Unusual network activity refers to deviations from established traffic baselines. This can include
+        unexpected surges in data volume, communication with rare external destinations, or the use of
+        unauthorized protocols. Identifying these anomalies is key to detecting lateral movement, data
+        exfiltration, and command-and-control (C2) activity.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries often generate unusual network patterns when executing their mission. Common indicators
+        include:
+      </p>
+      <ul>
+        <li><strong>Exfiltration:</strong> Large outbound transfers to cloud storage or unfamiliar IPs.</li>
+        <li><strong>Lateral Movement:</strong> Internal scanning or RDP/SSH connections between atypical workstations.</li>
+        <li><strong>Beaconing:</strong> Consistent, periodic heartbeats to external C2 infrastructure.</li>
+        <li><strong>Discovery:</strong> High volumes of "Connection Refused" or "Destination Unreachable" errors.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Characterize the Activity</h3>
+      <h4>Type of unusual activity:</h4>
+      <ul>
+        <li><strong>Volume Spike:</strong> Measure increase percentage and duration compared to the 7-day average.</li>
+        <li><strong>Unusual Timing:</strong> Note deviation from the system's standard operating hours (e.g., midnight backups).</li>
+        <li><strong>New Destination:</strong> Identify the target IP/Domain and its intended purpose.</li>
+        <li><strong>New Protocol:</strong> Verify legitimacy (e.g., sudden use of FTP or Telnet in a secure zone).</li>
+        <li><strong>Bandwidth Consumption:</strong> Quantify the data transfer to check for potential exfiltration.</li>
+      </ul>
+
+      <h3>Identify Source and Destination</h3>
+      <ul>
+        <li>
+          <strong>Internal to Internal?</strong>
+          <ul>
+            <li>Check for signs of lateral movement.</li>
+            <li>Verify both source and destination systems for signs of compromise.</li>
+            <li>Review the relationship between systems (e.g., should a HR laptop be talking to a SQL Server?).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Internal to External?</strong>
+          <ul>
+            <li>Check the reputation of the external IP or domain via Threat Intel.</li>
+            <li>Review for data exfiltration indicators (e.g., long-lived connections, large uploads).</li>
+            <li>Verify the business need for this specific external communication.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>External to Internal?</strong>
+          <ul>
+            <li>Verify the legitimacy of the inbound connection (e.g., VPN, Public Web Server).</li>
+            <li>Check for scan/probe activity (e.g., many ports hit in a short time).</li>
+            <li>Review firewall rules to ensure the traffic is authorized.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Compare to Baseline</h3>
+      <h4>Is there a legitimate reason for change?</h4>
+      <ul>
+        <li><strong>New Application Deployment:</strong> Verify with the IT or Development team.</li>
+        <li><strong>Business Process Change:</strong> Verify with the relevant business unit.</li>
+        <li><strong>Scheduled Backup/Update:</strong> Check against known maintenance windows.</li>
+        <li><strong>System Migration:</strong> Verify via an active Change Management ticket.</li>
+        <li><strong>No Known Reason:</strong> Proceed to Malicious Indicator Analysis.</li>
+      </ul>
+
+      <h3>Does activity show malicious indicators?</h3>
+      <ul>
+        <li>
+          <strong>Yes (C2 beaconing, exfiltration patterns, scanning)</strong>
+          <ul>
+            <li>Isolate affected systems immediately.</li>
+            <li>Capture network traffic (PCAP) for deep packet analysis.</li>
+            <li><strong>Escalate to IR immediately.</strong></li>
+            <li>Begin containment procedures (block IPs at the firewall).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Suspicious but unclear</strong>
+          <ul>
+            <li>Request Senior Analyst review.</li>
+            <li>Continue enhanced monitoring of the involved assets.</li>
+            <li>Analyze protocols and payloads if unencrypted.</li>
+            <li>Check for related alerts on the same hosts (e.g., AV or EDR alerts).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Benign</strong>
+          <ul>
+            <li>Update the behavioral baseline to include this activity.</li>
+            <li>Document the new "normal" behavior in the asset inventory.</li>
+            <li>Close the alert.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>NetFlow / IPFIX Analysis Tools</li>
+        <li>Wireshark / Zeek (for traffic inspection)</li>
+        <li>Threat Intelligence (VirusTotal, Cisco Talos, Joe Sandbox)</li>
+        <li>SIEM Traffic Dashboards (Top Talkers, Byte Count spikes)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Determine if the traffic represents a threat or a configuration change.</li>
+        <li>Block malicious external IPs at the perimeter firewall/proxy.</li>
+        <li>Isolate internal hosts showing signs of lateral movement or C2.</li>
+        <li>Update monitoring rules to account for authorized baseline shifts.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1071 (Application Layer Protocol)</li>
+        <li>MITRE ATT&CK – T1041 (Exfiltration Over C2 Channel)</li>
+        <li>NIST SP 800-94 – Guide to IDPS</li>
+        <li>Internal Network Architecture Diagram &amp; VLAN Map</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

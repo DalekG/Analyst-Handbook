@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Privilege Escalation Attempts – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Privilege Escalation Attempts</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Privilege escalation is the process by which an adversary gains higher-level permissions on a
+        system or network. Typically, an attacker enters with low-level access and seeks to become
+        a local administrator or domain administrator to bypass security controls and access sensitive data.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Attackers exploit software bugs, design flaws, or configuration oversights to "elevate"
+        their privileges. In late 2025, many escalation attempts involve automated scripts or
+        AI-assisted vulnerability scanners that look for specific misconfigurations in real-time.
+      </p>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Escalation Method</h3>
+      <h4>What technique is being used?</h4>
+      <ul>
+        <li><strong>Exploiting Vulnerable Service:</strong> Using known CVEs to crash/subvert a service running as SYSTEM.</li>
+        <li><strong>Abusing Misconfigured Permissions:</strong> Exploiting weak file permissions or unquoted service paths.</li>
+        <li><strong>Token Manipulation:</strong> Duplicating or impersonating the access token of an existing high-privilege process.</li>
+        <li><strong>Scheduled Task Abuse:</strong> Modifying tasks that run with elevated privileges.</li>
+        <li><strong>DLL Hijacking:</strong> Placing a malicious DLL in a path where a privileged process will load it.</li>
+        <li><strong>Kernel Vulnerability:</strong> Exploiting the OS kernel to gain direct ring-0 access.</li>
+        <li><strong>Sudo/UAC Bypass:</strong> Evading built-in prompts for administrative confirmation.</li>
+      </ul>
+
+      <h3>Identify the Actor</h3>
+      <h4>User account attempting escalation:</h4>
+      <ul>
+        <li><strong>Legitimate User Account:</strong> Check if this is an authorized IT/Admin action.</li>
+        <li><strong>Service Account:</strong> Highly unusual; investigate for automated service compromise.</li>
+        <li><strong>Local Account:</strong> Verify if the account should even exist or have interactive login rights.</li>
+        <li><strong>Domain Account:</strong> Check account status, recent logins, and existing privileges.</li>
+      </ul>
+
+      <h4>Process attempting escalation:</h4>
+      <ul>
+        <li><strong>Known Application:</strong> Check if the software is performing an authorized update.</li>
+        <li><strong>System Process:</strong> High concern; may indicate process injection into <code>lsass.exe</code> or <code>svchost.exe</code>.</li>
+        <li><strong>Suspicious Executable:</strong> Analyze the file hash and source directory (e.g., <code>\Temp\</code>).</li>
+        <li><strong>Script (PowerShell, Bash):</strong> Review the command line and script content for discovery or exploitation code.</li>
+      </ul>
+
+      <h3>Was Escalation Successful?</h3>
+      <ul>
+        <li>
+          <strong>Yes:</strong>
+          <ul>
+            <li><strong>Immediately isolate</strong> the affected system from the network.</li>
+            <li>Terminate all elevated processes identified in the process tree.</li>
+            <li>Review all actions taken with elevated privileges (e.g., event logs, file modifications).</li>
+            <li>Check for persistence (new users, new services, or registry keys).</li>
+            <li><strong>Escalate to IR immediately.</strong></li>
+          </ul>
+        </li>
+        <li>
+          <strong>No (Blocked or Failed):</strong>
+          <ul>
+            <li>Continue monitoring for repeated attempts.</li>
+            <li>Proceed with deep investigation to find the "patient zero" access point.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Is this Authorized Activity?</h3>
+      <ul>
+        <li>
+          <strong>Yes (IT Maintenance, Authorized Install):</strong>
+          <ul>
+            <li>Verify against a Change Management ticket.</li>
+            <li>Confirm directly with the user or administrator.</li>
+            <li>Document the justification and close the alert.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No:</strong>
+          <ul>
+            <li>Review the system for other indicators of compromise (IOCs).</li>
+            <li>Identify the specific vulnerability that allowed the attempt (and needs patching).</li>
+            <li>Review all recent activity on the system prior to the escalation attempt.</li>
+            <li>Scan the host for dormant malware or additional tools.</li>
+            <li>Request Senior Analyst review and escalate if this is part of a larger attack pattern.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>EDR Process Tree (Look for <code>cmd.exe</code> or <code>powershell.exe</code> spawning from <code>services.exe</code>)</li>
+        <li>Windows Event Logs (Security: 4672 - Special Privileges Assigned, 4688 - Process Creation)</li>
+        <li>Sysmon Event ID 10 (Process Access/Injection)</li>
+        <li>Privilege Escalation Scanners (e.g., WinPEAS, LinPEAS logs)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Isolate compromised hosts and revoke associated session tokens.</li>
+        <li>Identify the "Low-Privilege" entry point used before the escalation attempt.</li>
+        <li>Apply patches or configuration changes to close the vulnerability.</li>
+        <li>Review similar assets in the environment for the same misconfiguration.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – TA0004 (Privilege Escalation)</li>
+        <li>MITRE ATT&CK – T1548 (Abuse Elevation Control Mechanism)</li>
+        <li>NIST SP 800-181 – Workforce Framework for Cybersecurity</li>
+        <li>Internal Vulnerability Management and Patching Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unusual Application Activity – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unusual Application Activity</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Monitoring application behavior is essential for detecting "living-off-the-land" attacks,
+        software vulnerabilities, and unauthorized software installations. This workflow focuses
+        on identifying applications that deviate from their normal operational profile or
+        performing actions that fall outside their intended scope.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Malicious application activity often manifests as legitimate software being subverted
+        (e.g., process injection) or unauthorized binaries being executed. Key patterns include:
+      </p>
+      <ul>
+        <li>Exploitation of vulnerabilities to gain unauthorized access</li>
+        <li>Applications spawning unexpected child processes (e.g., <code>word.exe</code> spawning <code>powershell.exe</code>)</li>
+        <li>Unauthorized data collection or "scraping" of sensitive directories</li>
+        <li>Subverting service accounts for credential harvesting</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Application</h3>
+
+      <h4>Known business application?</h4>
+      <ul>
+        <li>Verify expected behavior for the specific application type</li>
+        <li>Check the current version and patch level against known vulnerabilities</li>
+        <li>Review recent updates or changes via the Change Management log</li>
+      </ul>
+
+      <h4>Unknown or unauthorized application?</h4>
+      <ul>
+        <li>Research the application's purpose and legitimate vendors</li>
+        <li>Check file hashes (MD5/SHA256) against known malware databases</li>
+        <li>Review how it was installed (e.g., SCCM, manual download, or dropped by another process)</li>
+      </ul>
+
+      <h3>Characterize Unusual Behavior</h3>
+      <h4>What specifically is unusual?</h4>
+      <ul>
+        <li><strong>Resource Usage Spike:</strong> Sudden high CPU, memory, disk, or network utilization.</li>
+        <li><strong>Unexpected Outbound Connections:</strong> Application communicating with external IPs not in its whitelist.</li>
+        <li><strong>Accessing Sensitive Files:</strong> Unauthorized reading/writing to sensitive directories (e.g., <code>C:\Windows\System32\config</code>).</li>
+        <li><strong>Unusual Commands:</strong> Running atypical processes or command-line arguments.</li>
+        <li><strong>Crashing/Error Patterns:</strong> Frequent crashes indicating potential buffer overflow attempts or misconfiguration.</li>
+        <li><strong>Privilege Escalation:</strong> Attempts to gain higher-level permissions (e.g., UAC bypass).</li>
+      </ul>
+
+      <h3>Identify the User Context</h3>
+      <h4>Running as which user?</h4>
+      <ul>
+        <li><strong>System/Root:</strong> High concern if this application does not normally require kernel-level access.</li>
+        <li><strong>Service Account:</strong> Verify if the action aligns with the expected service behavior.</li>
+        <li><strong>Standard User:</strong> Verify if the user intentionally initiated the action.</li>
+        <li><strong>Unknown User:</strong> Investigate immediately as a potential sign of account creation or hijacking.</li>
+      </ul>
+
+      <h3>Is this Authorized Behavior?</h3>
+      <ul>
+        <li>
+          <strong>Yes (New feature, legitimate use, scheduled task):</strong>
+          <ul>
+            <li>Document the business justification and source of verification</li>
+            <li>Update the application's behavioral baseline</li>
+            <li>Adjust monitoring thresholds if the alert was too sensitive</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No:</strong>
+          <ul>
+            <li>Check for signs of application compromise (e.g., DLL side-loading)</li>
+            <li>Review detailed application logs for specific anomalies</li>
+            <li>Perform a full system scan for malware or persistence mechanisms</li>
+            <li>Verify if the version is vulnerable to known exploits (CVEs)</li>
+            <li><strong>Escalate</strong> if indicators of compromise (IOCs) are confirmed</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>EDR Process Tree View (to visualize parent/child relationships)</li>
+        <li>AppLocker / Windows Defender Application Control (WDAC) logs</li>
+        <li>Sysmon Event ID 1 (Process Creation) and Event ID 3 (Network Connection)</li>
+        <li>VirusTotal / Hybrid Analysis (for binary reputation)</li>
+        <li>CVE Databases (NVD, MITRE)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Terminate unauthorized or malicious processes</li>
+        <li>Quarantine suspicious binaries for forensic analysis</li>
+        <li>Disable associated service accounts if compromise is suspected</li>
+        <li>Apply emergency patches if the activity stemmed from a vulnerability</li>
+        <li>Update application whitelisting policies to prevent recurrence</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1204 (User Execution)</li>
+        <li>MITRE ATT&CK – T1059 (Command and Scripting Interpreter)</li>
+        <li>NIST SP 800-167 – Guide to Application Whitelisting</li>
+        <li>Internal Software Security & Patching Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Access from Impossible Travel Locations – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Access from Impossible Travel Locations</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        "Impossible travel" alerts indicate that a single user account has authenticated from two geographically
+        distant locations within a timeframe that is physically impossible to traverse. This is a strong indicator
+        of a compromised account, shared credentials, or the use of proxies/VPNs by an attacker.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Attackers frequently use VPNs, cloud virtual private servers (VPS), or residential proxies in various
+        countries to evade detection systems based on geography. They may use stolen credentials captured from one
+        location and immediately use them from their own location to access internal resources.
+      </p>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Analyze the Travel Scenario</h3>
+      <h4>Calculate time and distance:</h4>
+      <ul>
+        <li>Determine time between the two consecutive logins.</li>
+        <li>Calculate the great-circle distance between the IP geolocations.</li>
+        <li>Determine physically possible travel time (e.g., flight time + airport time).</li>
+        <li><strong>Flag:</strong> If login time is less than possible travel time, proceed to investigation.</li>
+      </ul>
+
+      <h4>Location details:</h4>
+      <ul>
+        <li><strong>First Location:</strong> Verify it matches the user's known corporate office or home location.</li>
+        <li><strong>Second Location:</strong> Check if it is a legitimate business office, a common travel destination, or a known high-risk/sanctioned location.</li>
+        <li><strong>Data Center Location:</strong> May indicate use of a compromised service account or VPS.</li>
+      </ul>
+
+      <h4>Is a VPN or Proxy explaining the difference?</h4>
+      <ul>
+        <li>Check VPN logs to see if the user was connected at the time of one or both logins.</li>
+      </ul>
+
+      <h3>Review Authentication Details</h3>
+      <h4>Compare First and Second Authentication:</h4>
+      <ul>
+        <li><strong>Authentication Method:</strong> Were both password-based, or was MFA used on both?</li>
+        <li><strong>IP Address and ISP:</strong> Are they residential, corporate, or known cloud hosting providers?</li>
+        <li><strong>User Agent and Device Type:</strong> Are the operating system and browser strings consistent across both logins? (e.g., Windows 10 vs. Kali Linux).</li>
+        <li>Compare device fingerprinting data if available via Identity Provider (IdP) logs.</li>
+      </ul>
+
+      <h3>Check Account Activity</h3>
+      <h4>What did the user do from each location?</h4>
+      <ul>
+        <li><strong>First Location:</strong> Was the activity normal business behavior?</li>
+        <li><strong>Second Location:</strong> Did the user access sensitive data, change configurations, send emails, or create forwarding rules? (Look for high-risk actions).</li>
+      </ul>
+
+      <h3>Contact User for Verification</h3>
+      <h4>Reach user directly (phone, in-person if possible):</h4>
+      <ul>
+        <li>Verify their current physical location.</li>
+        <li>Confirm they initiated both login sessions.</li>
+        <li>Ask if they are using a corporate VPN or local proxy software.</li>
+        <li>Inquire about sharing credentials or any recent phishing attempts.</li>
+        <li>Determine if they have recently changed their password.</li>
+      </ul>
+
+      <h3>Is this Legitimate?</h3>
+      <ul>
+        <li>
+          <strong>Yes (VPN usage, authorized shared account, or location error):</strong>
+          <ul>
+            <li>Document the explanation and verification details.</li>
+            <li>Update the travel or IP baseline if this is a new authorized location or pattern.</li>
+            <li>Close the alert.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>User denies second location:</strong>
+          <ul>
+            <li><strong>Execute the Account Compromise workflow immediately.</strong></li>
+            <li>Disable the account and terminate all sessions.</li>
+            <li>Reset password via a secure out-of-band method.</li>
+            <li>Review all actions taken from the suspicious second location.</li>
+            <li><strong>Escalate to Incident Response (IR).</strong></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Cannot reach user:</strong>
+          <ul>
+            <li>Request Senior Analyst review.</li>
+            <li>Monitor the account closely for additional suspicious activity.</li>
+            <li>Restrict account access or force a password reset if highly suspicious activity is observed.</li>
+            <li>Continue attempts to contact the user and their manager.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Identity Provider (IdP) Logs (Azure AD, Okta, Ping Identity)</li>
+        <li>SIEM Search: <code>sourcetype="authentication" | geoip client_ip | sort _time</code></li>
+        <li>VPN Authentication Logs</li>
+        <li>IP Geolocation Tools (MaxMind, ARIN lookup)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Determine if the technical anomaly is benign (VPN use) or malicious (compromise).</li>
+        <li>Invalidate sessions and force password resets for confirmed compromises.</li>
+        <li>Engage IR to determine if the attacker successfully accessed sensitive data from the second location.</li>
+        <li>Tune authentication policies to better detect and block high-risk geolocations if applicable.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1078 (Valid Accounts)</li>
+        <li>NIST SP 800-63B – Digital Identity Guidelines (Risk-Based Authentication)</li>
+        <li>Internal Travel Policy and VPN Procedures</li>
+        <li>Account Compromise Playbook</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

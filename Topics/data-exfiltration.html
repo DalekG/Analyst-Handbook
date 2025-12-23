@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Exfiltration – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Data Exfiltration</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Data exfiltration is the unauthorized transfer of sensitive information from within the network
+        to an external location. This workflow provides junior analysts with steps to characterize,
+        contain, and respond to potential data loss events, which often represent the final stage of
+        an advanced attack.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries leverage various methods to bypass security controls and transfer data out of an
+        organization's control. These include using legitimate protocols in unusual ways, hiding data
+        in encrypted streams, or using approved cloud services to blend in with normal traffic.
+      </p>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Data Transfer Characteristics</h3>
+      <h4>Volume of data:</h4>
+      <ul>
+        <li><strong>Large Single Transfer:</strong> Suggests a direct, targeted exfiltration attempt.</li>
+        <li><strong>Small Frequent Transfers:</strong> Could indicate slow, stealthy exfiltration or C2 beaconing.</li>
+        <li><strong>Gradual Increase:</strong> May be indicative of automated malware or a slow insider threat.</li>
+      </ul>
+
+      <h4>Destination:</h4>
+      <ul>
+        <li><strong>External IP:</strong> Check reputation and geolocation.</li>
+        <li><strong>Cloud Storage:</strong> Verify against authorized corporate services (e.g., sanctioned OneDrive).</li>
+        <li><strong>Personal Email:</strong> Strong indicator of policy violation or insider threat activity.</li>
+        <li><strong>Unknown Destination:</strong> Investigate immediately via threat intelligence sources.</li>
+      </ul>
+
+      <h3>Identify Source and Method</h3>
+      <h4>What system is the source?</h4>
+      <ul>
+        <li><strong>Server with Sensitive Data:</strong> High concern; potential database compromise.</li>
+        <li><strong>Workstation:</strong> Check the user context and type of data accessed.</li>
+        <li><strong>Database Server:</strong> Critical concern; potential for bulk data loss.</li>
+      </ul>
+
+      <h4>What protocol/method used?</h4>
+      <ul>
+        <li><strong>HTTP/HTTPS Upload:</strong> Check destination URL and request size.</li>
+        <li><strong>FTP/SFTP:</strong> Review credentials used and authorization for the destination.</li>
+        <li><strong>Email:</strong> Check attachments and all recipients (including BCC).</li>
+        <li><strong>DNS Tunneling:</strong> An advanced, stealthy exfiltration technique (requires deep packet inspection).</li>
+        <li><strong>Cloud Sync:</strong> Check for unauthorized synchronization tools or personal accounts linked to corporate data.</li>
+      </ul>
+
+      <h3>Identify What Data Is Being Transferred</h3>
+      <h4>Can you determine data type?</h4>
+      <ul>
+        <li>Run DLP analysis on the traffic or available logs if possible.</li>
+        <li>Check source directories/databases accessed just prior to the transfer.</li>
+        <li>Review file extensions/types being transferred.</li>
+      </ul>
+
+      <h4>Sensitivity level:</h4>
+      <ul>
+        <li><strong>Public Information:</strong> Lower concern.</li>
+        <li><strong>Internal Business Data:</strong> Moderate concern.</li>
+        <li><strong>Confidential/PII/PHI:</strong> High concern; legal and regulatory obligations likely apply.</li>
+        <li><strong>Classified:</strong> Critical concern; engage appropriate authorities immediately.</li>
+      </ul>
+
+      <h3>Is this Authorized Activity?</h3>
+      <ul>
+        <li>
+          <strong>Yes (Approved cloud backup, authorized file transfer, business need):</strong>
+          <ul>
+            <li>Verify authorization documentation (e.g., ticket ID).</li>
+            <li>Ensure proper controls were in place during transfer (e.g., encryption in transit).</li>
+            <li>Document findings and close the alert.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No or Unclear:</strong>
+          <ul>
+            <li>Proceed immediately to containment procedures.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Execute Containment</h3>
+      <h4>If transfer ongoing:</h4>
+      <ul>
+        <li>Block the destination IP/URL at the firewall/proxy immediately.</li>
+        <li>Isolate the source system from the network (do not shut down).</li>
+        <li>Terminate the user session if applicable.</li>
+      </ul>
+
+      <h4>Document what was transferred:</h4>
+      <ul>
+        <li>Total volume of data.</li>
+        <li>Time period of the exfiltration event.</li>
+        <li>Complete file list if possible from logs.</li>
+      </ul>
+
+      <h4>Identify destination and attempt to:</h4>
+      <ul>
+        <li>Contact destination provider (e.g., cloud hoster) for takedown/preservation.</li>
+        <li>Determine if data is retrievable.</li>
+        <li>Assess if destination is attacker-controlled infrastructure.</li>
+      </ul>
+
+      <h3>Assess Impact and Respond</h3>
+      <ul>
+        <li>Determine what data was successfully exfiltrated (the scope of the breach).</li>
+        <li>Identify all potentially affected individuals/customers.</li>
+        <li>Review compliance and legal obligations:
+          <ul>
+            <li>Breach notification requirements (e.g., state laws).</li>
+            <li>Regulatory reporting (HIPAA, GDPR, etc.).</li>
+            <li>Law enforcement notification if criminal activity is confirmed.</li>
+          </ul>
+        </li>
+        <li><strong>Escalate to IR immediately.</strong></li>
+        <li>Engage legal and compliance teams.</li>
+        <li>Begin full incident response and forensic procedures.</li>
+        <li>Identify root cause and remediate vulnerability (e.g., patch system, change policy).</li>
+        <li>Consider insider threat investigation if applicable.</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>DLP (Data Loss Prevention) Alerts and Logs</li>
+        <li>Network Flow/Proxy Logs (for volume analysis and destinations)</li>
+        <li>EDR File Access Logs & USB Connection Logs</li>
+        <li>Threat Intelligence Platforms (for destination reputation)</li>
+        <li>SIEM Queries for large outbound transfers</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Contain the spread of the data by blocking destinations and isolating sources.</li>
+        <li>Engage legal and privacy officers due to PII/regulated data involvement.</li>
+        <li>Determine if public breach notification is required.</li>
+        <li>Remediate the initial access vector and harden defenses against similar attacks.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – TA0010 (Exfiltration)</li>
+        <li>NIST SP 800-61 Rev. 2 – Incident Handling Guide (Containment phase)</li>
+        <li>HIPAA / GDPR / CCPA Regulatory Guides</li>
+        <li>Internal Acceptable Use Policy & Data Classification Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

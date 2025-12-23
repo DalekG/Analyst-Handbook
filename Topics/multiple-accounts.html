@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiple Accounts Accessed from Single Source – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Multiple Accounts Accessed from Single Source</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Detection of multiple accounts being accessed or attempted from a single source IP or host is a high-fidelity
+        indicator of <strong>Password Spraying</strong>, <strong>Credential Stuffing</strong>, or <strong>Internal Reconnaissance</strong>.
+        As of 2025, adversaries frequently use this technique to find "low-hanging fruit"—accounts with weak
+        passwords that lack MFA—to establish an initial foothold or move laterally.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Attackers automate login attempts against a list of known users to evade per-account lockout policies.
+        Key patterns include:
+      </p>
+      <ul>
+        <li><strong>Password Spraying:</strong> Testing one common password (e.g., <code>Winter2025!</code>) against hundreds of users.</li>
+        <li><strong>Credential Stuffing:</strong> Using pairs of usernames/passwords leaked from third-party breaches.</li>
+        <li><strong>Lateral Movement:</strong> A compromised internal host attempting to log into multiple servers to find accessible data.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Characterize the Pattern</h3>
+      <h4>How many accounts are involved?</h4>
+      <ul>
+        <li><strong>2-5 Accounts:</strong> Possible legitimate administrative activity or user error; investigate context.</li>
+        <li><strong>5-20 Accounts:</strong> High concern; indicates a likely automated attack pattern.</li>
+        <li><strong>20+ Accounts:</strong> <strong>Attack in progress;</strong> escalate to Senior Analysts immediately.</li>
+      </ul>
+
+      <h4>Type of accounts:</h4>
+      <ul>
+        <li><strong>Similar Privilege Level:</strong> Suggests an automated "spray" across a department or the whole org.</li>
+        <li><strong>Escalating Privileges:</strong> Suggests a targeted attack moving toward Domain Admin/Root.</li>
+        <li><strong>Mix of Privileges:</strong> Likely reconnaissance or broad credential stuffing.</li>
+        <li><strong>Related Accounts:</strong> (e.g., all in Finance) Could be a legitimate batch process; verify with the department lead.</li>
+      </ul>
+
+      <h3>Identify the Source</h3>
+      <h4>Source location:</h4>
+      <ul>
+        <li><strong>Internal IP:</strong> Check the host for signs of compromise or unauthorized scanning tools.</li>
+        <li><strong>External IP:</strong> Check reputation via threat intelligence (e.g., known Tor exit nodes or proxies).</li>
+        <li><strong>VPN Connection:</strong> Verify if the VPN account used to establish the tunnel is legitimate.</li>
+        <li><strong>Proxy/TOR:</strong> High suspicion; standard traffic should not originate from these anonymizers.</li>
+      </ul>
+
+      <h4>Source system identification:</h4>
+      <ul>
+        <li><strong>Known Workstation:</strong> Check if the primary user is logged in or if a scheduled task is running.</li>
+        <li><strong>Server:</strong> Highly suspicious; servers should generally not initiate interactive logins to other hosts.</li>
+        <li><strong>Unknown System:</strong> Investigate immediately as a potential "Rogue Device" on the network.</li>
+      </ul>
+
+      <h3>Analyze Authentication Pattern</h3>
+      <h4>Authentication method and timing:</h4>
+      <ul>
+        <li><strong>Method:</strong> Are all attempts using the same protocol (e.g., all RDP or all O365)?</li>
+        <li><strong>Timing (Rapid):</strong> Automated tool execution (e.g., 1 attempt per second).</li>
+        <li><strong>Timing (Spaced):</strong> "Low and Slow" attack designed to evade threshold-based alerts.</li>
+        <li><strong>Pattern Recognition:</strong> Check if usernames are targeted sequentially, alphabetically, or via dictionary.</li>
+      </ul>
+
+      <h3>Were any authentications successful?</h3>
+      <ul>
+        <li>
+          <strong>Yes:</strong>
+          <ul>
+            <li>Identify every account that was successfully compromised.</li>
+            <li><strong>Execute Account Compromise workflow</strong> for each affected account.</li>
+            <li>Disable all successfully accessed accounts and reset passwords.</li>
+            <li><strong>Escalate to Incident Response (IR) immediately.</strong></li>
+          </ul>
+        </li>
+        <li>
+          <strong>No (All Failed):</strong>
+          <ul>
+            <li>Still a critical event; the attack is currently in the "Discovery" or "Brute Force" phase.</li>
+            <li>Proceed to Containment and Response.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Execute Containment and Response</h3>
+      <ul>
+        <li><strong>Block the source IP</strong> at the perimeter firewall or internal access control lists (ACLs).</li>
+        <li>Enable enhanced monitoring/logging for all targeted accounts.</li>
+        <li>Force a password reset on all targeted accounts if they are considered "high risk."</li>
+        <li>Enable MFA for any targeted accounts that do not currently have it enforced.</li>
+        <li>If the source is internal, isolate the host and scan for malware or hacking tools (e.g., Mimikatz, Responder).</li>
+        <li>Request Senior Analyst review to update IDS/IPS signatures and document the attack IOCs.</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>SIEM Search: <code>stats count(user) as attempt_count by src_ip | where attempt_count > 5</code></li>
+        <li>Identity Provider Logs (Azure AD Risky Sign-ins, Okta System Log)</li>
+        <li>Threat Intel (VirusTotal, AbuseIPDB, GreyNoise)</li>
+        <li>EDR (to identify processes on internal source hosts)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Neutralize the source of the attack (Block IP or Isolate Host).</li>
+        <li>Remediate any accounts that were successfully accessed.</li>
+        <li>Perform a threat hunt to see if the same source IP was active in the environment previously.</li>
+        <li>Update security policies (e.g., implement account lockout thresholds or Geofencing).</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1110.003 (Password Spraying)</li>
+        <li>MITRE ATT&CK – T1110.004 (Credential Stuffing)</li>
+        <li>NIST SP 800-63B – Authenticator Assurance Levels</li>
+        <li>Internal Password & Authentication Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

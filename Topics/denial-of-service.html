@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Denial of Service – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Denial of Service (DoS/DDoS)</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        A Denial of Service (DoS) attack aims to make a machine or network resource unavailable
+        to its intended users. This is achieved by flooding the target with traffic or sending
+        information that triggers a crash. In 2025, these attacks frequently utilize AI-driven
+        botnets to bypass traditional rate-limiting controls.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries use DoS/DDoS for extortion, distraction during a separate breach, or
+        ideological reasons. Attacks generally fall into three categories:
+      </p>
+      <ul>
+        <li><strong>Volumetric:</strong> Saturates bandwidth with massive amounts of traffic.</li>
+        <li><strong>Protocol:</strong> Exploits weaknesses in Layer 3 or 4 (e.g., SYN Floods).</li>
+        <li><strong>Application Layer:</strong> Targets specific web functions (e.g., heavy database queries).</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Characterize the Attack</h3>
+      <h4>Type of DoS:</h4>
+      <ul>
+        <li><strong>Network Flood (SYN, UDP, ICMP):</strong> Volume-based exhaustion of network pipes.</li>
+        <li><strong>Application Layer (HTTP Flood, Slowloris):</strong> Focused resource exhaustion on web servers.</li>
+        <li><strong>Distributed (DDoS):</strong> Coordinated attack from multiple global sources.</li>
+        <li><strong>Amplification Attack:</strong> Reflected traffic (e.g., DNS, NTP, or Memcached) to multiply volume.</li>
+      </ul>
+
+      <h4>Volume and Severity:</h4>
+      <ul>
+        <li>Quantify traffic volume (Gbps) and throughput (Packets Per Second).</li>
+        <li>Identify the number of unique attack sources/IPs.</li>
+        <li>Note the duration of the impact and which specific services are failing.</li>
+      </ul>
+
+      <h3>Identify Target and Impact</h3>
+      <h4>What is being targeted?</h4>
+      <ul>
+        <li>Specific application or API endpoint.</li>
+        <li>Entire network segment or CIDR block.</li>
+        <li>Individual server IP address.</li>
+        <li>DNS infrastructure (which can take down all associated services).</li>
+      </ul>
+
+      <h4>Current and Business Impact:</h4>
+      <ul>
+        <li><strong>Service Status:</strong> Is it completely down, degraded, or partially out?</li>
+        <li><strong>Operations:</strong> Are customer-facing services or internal employee operations disrupted?</li>
+        <li><strong>Risk:</strong> Assess immediate financial loss and long-term reputation damage.</li>
+      </ul>
+
+      <h3>Identify Attack Source(s)</h3>
+      <h4>Source IP Analysis:</h4>
+      <ul>
+        <li><strong>Single Source:</strong> Block immediately at the local firewall.</li>
+        <li><strong>Multiple Sources (DDoS):</strong> Coordinate with ISP or scrubbing service.</li>
+        <li><strong>Spoofed Sources:</strong> Common in amplification; local blocking is often ineffective.</li>
+        <li><strong>Geolocation:</strong> Identify patterns that might suggest a regional campaign.</li>
+      </ul>
+
+      <h4>Attack Characteristics:</h4>
+      <ul>
+        <li><strong>Legitimate-Looking:</strong> Likely an Application Layer attack targeting software logic.</li>
+        <li><strong>Malformed Packets:</strong> Network Layer attack targeting hardware/OS stacks.</li>
+        <li><strong>Botnet Signatures:</strong> Cross-reference sources with known botnet families (e.g., Mirai variants).</li>
+      </ul>
+
+      <h3>Implement Immediate Mitigation</h3>
+      <h4>Network Level:</h4>
+      <ul>
+        <li>Block attacking IPs at the perimeter firewall.</li>
+        <li>Implement rate limiting on the edge router.</li>
+        <li>Enable hardware anti-DDoS features.</li>
+        <li>Contact ISP for <strong>Upstream Blocking</strong> or <strong>Remote Triggered Black Hole (RTBH)</strong>.</li>
+        <li>Route traffic to a specialized scrubbing center (e.g., Cloudflare, Akamai).</li>
+      </ul>
+
+      <h4>Application Level:</h4>
+      <ul>
+        <li>Enable/Force CDN caching.</li>
+        <li>Implement CAPTCHA challenges to filter bot traffic.</li>
+        <li>Adjust Web Application Firewall (WAF) rules to drop suspicious headers.</li>
+        <li>Scale cloud resources (auto-scaling) if budget permits.</li>
+        <li>Activate geo-blocking if the attack is localized to specific regions.</li>
+      </ul>
+
+      <h3>Is Mitigation Effective?</h3>
+      <ul>
+        <li>
+          <strong>Yes:</strong>
+          <ul>
+            <li>Continue enhanced monitoring.</li>
+            <li>Document the attack timeline and effectiveness of each control.</li>
+            <li>Maintain heightened alertness for secondary "distraction" attacks.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No:</strong>
+          <ul>
+            <li><strong>Escalate</strong> to Senior Analysts and Network Architecture teams.</li>
+            <li>Engage specialized DDoS mitigation vendors.</li>
+            <li>Consider taking the service offline temporarily to protect backend infrastructure.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>NetFlow Analysis (Top Talkers by Source/Destination IP)</li>
+        <li>WAF Logs (Check for high request rates per Session/IP)</li>
+        <li>Firewall Throughput Monitors</li>
+        <li>SNMP monitoring for CPU/Memory on network appliances</li>
+        <li>External Monitoring (e.g., Pingdom, ThousandEyes) for uptime status</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Identify the attack type and implement the appropriate mitigation layer.</li>
+        <li>Coordinate with ISPs to handle volumetric floods before they reach the pipe.</li>
+        <li>Document the attack and update the DoS response playbook based on findings.</li>
+        <li>Conduct a post-mortem to identify vulnerabilities or missing security controls.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – TA0042 (Resource Hijacking / Denial of Service)</li>
+        <li>NIST SP 800-189 – Resilient Interdomain Traffic Guide</li>
+        <li>Internal DDoS Mitigation Plan and Scrubbing Center Contacts</li>
+        <li>ISP Emergency Contact Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

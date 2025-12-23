@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unusual Account Creation – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Unusual Account Creation</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Unauthorized or unusual account creation is a common technique used by adversaries to establish
+        persistence within a network. This workflow ensures that every new account is scrutinized for
+        proper authorization, appropriate privilege levels, and legitimate business justification.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries create accounts to maintain access (Persistence), escalate privileges, or bypass
+        security controls. Tactics often include:
+      </p>
+      <ul>
+        <li>Creating local administrator accounts for "backdoor" access</li>
+        <li>Adding users to sensitive groups (e.g., Domain Admins)</li>
+        <li>Misusing service accounts to hide malicious automated processes</li>
+        <li>Creating accounts during non-business hours to avoid detection</li>
+      </ul>
+    </section>
+
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>Accounts created outside of standard HR onboarding windows</li>
+        <li>New accounts with immediate elevation to administrative groups</li>
+        <li>Account names that mimic existing naming conventions (e.g., "svc_backup2")</li>
+        <li>Accounts created by users who do not typically perform administrative tasks</li>
+        <li>Successful logins immediately following account creation</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Account Details</h3>
+
+      <h4>What type of account?</h4>
+      <ul>
+        <li><strong>Local Administrator:</strong> High concern; investigate immediately</li>
+        <li><strong>Domain User:</strong> Standard concern; verify against HR/Onboarding</li>
+        <li><strong>Service Account:</strong> Verify legitimacy with App/System owner</li>
+        <li><strong>Guest/Temporary:</strong> Check for specific project authorization</li>
+      </ul>
+
+      <h4>What privileges were assigned?</h4>
+      <ul>
+        <li><strong>Administrative Rights:</strong> Immediate review of group memberships</li>
+        <li><strong>Standard User:</strong> Lower priority, but still requires validation</li>
+        <li><strong>Specific Group Memberships:</strong> Verify necessity (e.g., Remote Desktop Users, VPN)</li>
+      </ul>
+
+      <h3>Identify Who Created the Account</h3>
+
+      <h4>Known Administrator?</h4>
+      <ul>
+        <li>Verify with the administrator directly (Use phone or IM; <strong>do not use email</strong> if compromise is suspected)</li>
+        <li>Check if a corresponding Change Management ticket exists</li>
+        <li>Confirm business justification for the new account</li>
+      </ul>
+
+      <h4>Unknown or Suspicious Creator?</h4>
+      <ul>
+        <li>Check if the creator's account itself has been compromised</li>
+        <li>Review all recent actions/logs performed by the creator account</li>
+        <li><strong>Escalate immediately</strong> to Senior Analysts or IR</li>
+      </ul>
+
+      <h3>Identify Timing</h3>
+
+      <h4>When was the account created?</h4>
+      <ul>
+        <li>
+          <strong>Business Hours:</strong>
+          <ul>
+            <li>More likely to be legitimate; still require verification of authorization</li>
+          </ul>
+        </li>
+        <li>
+          <strong>After Hours / Weekend / Holiday:</strong>
+          <ul>
+            <li>Higher suspicion; requires immediate verification</li>
+            <li>Check for other suspicious activity in the same timeframe (logins, file access)</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Is the Account Creation Authorized?</h3>
+      <ul>
+        <li>
+          <strong>Yes (Verified ticket/New Hire/Service):</strong>
+          <ul>
+            <li>Document the justification and ticket number</li>
+            <li>Verify the account follows the principle of least privilege</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No:</strong>
+          <ul>
+            <li><strong>Disable the account immediately</strong></li>
+            <li>Review all activity performed by the account since creation</li>
+            <li>Scan for additional unauthorized accounts created by the same source</li>
+            <li>Escalate to Incident Response (IR)</li>
+            <li>Initiate a compromise investigation on the <strong>creator's</strong> account</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Active Directory Users and Computers (ADUC) / Azure AD Audit Logs</li>
+        <li>SIEM (Filter for Event IDs: 4720 - Account Created, 4732/4728 - Group Membership)</li>
+        <li>Change Management System (ServiceNow, Jira, etc.)</li>
+        <li>EDR (To track the process used to create local accounts)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Identify and disable any unauthorized accounts</li>
+        <li>Identify the source of the creation (the 'actor')</li>
+        <li>Verify authorization via official documentation or direct contact</li>
+        <li>Perform impact analysis on any actions the new account took</li>
+        <li>Remediate the 'actor' account if it is found to be compromised</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1136 (Create Account)</li>
+        <li>MITRE ATT&CK – T1098 (Account Manipulation)</li>
+        <li>Internal Identity and Access Management (IAM) Policy</li>
+        <li>Active Directory Security Audit Guide</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

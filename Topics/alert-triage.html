@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alert Triage – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Alert Triage</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Alert triage is the critical first phase of the incident response lifecycle. This process ensures that
+        security events are prioritized, validated, and categorized correctly to ensure SOC resources are
+        focused on genuine threats while minimizing the noise from false positives.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Description</h2>
+      <p>
+        The triage process involves analyzing incoming alerts from various security platforms (SIEM, EDR, IDS)
+        to determine their validity. Effective triage prevents "alert fatigue" and ensures that indicators of
+        compromise (IOCs) are contained before they can escalate into full-scale breaches.
+      </p>
+    </section>
+
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>Known malicious hashes, IPs, or domains (IOCs)</li>
+        <li>Deviations from established user or system baselines</li>
+        <li>Multiple related alerts firing against a single asset</li>
+        <li>Unusual administrative activity or privilege escalation</li>
+        <li>Signatures matching known adversary tactics (MITRE ATT&CK)</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Alert Triage</h3>
+
+      <h4>Contain IOC?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Start a hunt playbook</li>
+            <li>Dig in to find other assets with the same IOC</li>
+            <li>Pivot to broader environmental scanning</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Proceed to next step</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Is this alert from an inside resource?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Identify that there isn't a malicious application present</li>
+            <li>Identify there is no malicious network traffic to or from the resource/asset</li>
+            <li>Determine whether this is normal or abnormal traffic/event based on baseline</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Proceed to next step</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Is this a real problem? (True Positive)</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Request Senior CND analyst review</li>
+            <li>Develop a <strong>Cyber 9-Line</strong> report</li>
+            <li>Escalate immediately to Incident Response (IR)</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Proceed to next step</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>Do we want to be alerted on this activity?</h4>
+      <ul>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Request Senior CND analyst review</li>
+            <li>Determine if any tweaks need to be made to the logic of the rule</li>
+            <li>Document why the alert is valuable despite this specific instance</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Request Senior CND analyst review</li>
+            <li>Determine what specific telemetry triggered the false positive</li>
+            <li>Tune the alert/correlation rule to prevent future recurrences</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>SIEM Dashboard (Elastic, Splunk, etc.)</li>
+        <li>EDR Console (CrowdStrike, SentinelOne, Carbon Black)</li>
+        <li>Threat Intelligence Feeds (VirusTotal, AlienVault)</li>
+        <li>Internal Asset Inventory / CMDB</li>
+        <li>Cyber 9-Line Reporting Template</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Verify the integrity of the alert source</li>
+        <li>Execute containment if IOCs are confirmed</li>
+        <li>Coordinate with Senior Analysts for rule tuning or escalation</li>
+        <li>Ensure all Cyber 9-Line details are accurate before IR handoff</li>
+        <li>Close out False Positives with detailed tuning notes</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>NIST SP 800-61 Rev. 2 – Computer Security Incident Handling Guide</li>
+        <li>Cyber 9-Line Reporting Standard</li>
+        <li>Internal Alert Tuning and Suppression Policy</li>
+        <li>SOC Operational Procedures – Escalation Matrix</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

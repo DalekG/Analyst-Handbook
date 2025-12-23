@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>After-Hours Privileged Access – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>After-Hours Privileged Access</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Privileged access outside of standard business hours is a high-risk indicator. While often
+        associated with emergency maintenance or on-call duties, it is also a primary signature
+        of credential compromise, as adversaries often operate during low-staffing periods to
+        evade detection and manual intervention.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries leverage administrative credentials during "quiet" hours to perform high-impact
+        actions with a lower risk of being noticed by the account owner. Common activities include:
+      </p>
+      <ul>
+        <li><strong>Mass Data Staging:</strong> Moving large volumes of data to exfiltration points.</li>
+        <li><strong>System Reconfiguration:</strong> Disabling security agents or modifying firewall rules.</li>
+        <li><strong>Persistence:</strong> Creating new administrative accounts or backdoors.</li>
+        <li><strong>Ransomware Deployment:</strong> Executing encryption routines when IT staff response is delayed.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Access Details</h3>
+      <h4>Specific account involved:</h4>
+      <ul>
+        <li><strong>Named Administrator:</strong> Facilitates direct contact and verification.</li>
+        <li><strong>Generic Admin Account:</strong> Identify the specific individual currently checked out or using the account via PAM logs.</li>
+        <li><strong>Service Account:</strong> <strong>High Concern:</strong> Service accounts should typically not have interactive (RDP/SSH) login capabilities.</li>
+        <li><strong>Break-Glass Account:</strong> Verify if an official emergency has been declared.</li>
+      </ul>
+
+      <h4>Time of access:</h4>
+      <ul>
+        <li><strong>Late Evening:</strong> Possible legitimate overtime; check for active project deadlines.</li>
+        <li><strong>Middle of Night (2-5 AM):</strong> High suspicion; typical "window of opportunity" for attackers.</li>
+        <li><strong>Weekend/Holiday:</strong> Verify against the on-call rotation or pre-approved maintenance windows.</li>
+      </ul>
+
+      <h3>Identify Access Source and Method</h3>
+      <h4>Source location:</h4>
+      <ul>
+        <li><strong>Corporate VPN:</strong> More likely legitimate; verify the VPN session IP and MFA status.</li>
+        <li><strong>Direct Internet:</strong> High concern; indicates bypass of standard secure access gateways.</li>
+        <li><strong>Known Admin Workstation:</strong> Lower concern; verify the host's physical location.</li>
+        <li><strong>Unknown System:</strong> Investigate immediately as a potential "bring your own device" (BYOD) or rogue host.</li>
+        <li><strong>Foreign Geolocation:</strong> Very high concern unless the administrator is on verified international travel.</li>
+      </ul>
+
+      <h4>Access method:</h4>
+      <ul>
+        <li><strong>Standard Protocols (RDP/SSH):</strong> Verify if this matches the user's typical remote management style.</li>
+        <li><strong>Unusual Protocols:</strong> (e.g., PowerShell Remoting from a new host) Investigate for "Living-off-the-Land" tactics.</li>
+        <li><strong>Brute Force Pattern:</strong> Multiple failed attempts followed by a success suggests a credential compromise event.</li>
+      </ul>
+
+      <h3>Verify Legitimacy</h3>
+      <h4>Contact Account Owner Directly:</h4>
+      <ul>
+        <li>Contact via phone or secure IM (<strong>Do not use email</strong>, as the account may be compromised).</li>
+        <li>Confirm they are currently working and have accessed the specific target system.</li>
+        <li>Inquire about the specific business purpose of the activity.</li>
+      </ul>
+
+      <h4>Check for Authorization:</h4>
+      <ul>
+        <li>Review Change Management (CM) tickets or scheduled maintenance windows.</li>
+        <li>Verify the administrator's status on the official On-Call schedule.</li>
+        <li>Check for documented emergency manager approvals.</li>
+      </ul>
+
+      <h3>Is Access Authorized?</h3>
+      <ul>
+        <li>
+          <strong>Yes (Verified with owner or approved change):</strong>
+          <ul>
+            <li>Monitor the session activity to ensure it stays within the stated scope.</li>
+            <li>Document the authorization details and ticket number.</li>
+            <li>Close the alert once the work is confirmed complete.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Cannot Verify (User unresponsive):</strong>
+          <ul>
+            <li>Request Senior Analyst review and begin technical behavior analysis.</li>
+            <li>Attempt alternate contact methods (e.g., calling their manager).</li>
+            <li>Prepare to disable the account if any destructive or suspicious actions are observed.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No (User denies access or no authorization found):</strong>
+          <ul>
+            <li><strong>Disable the account immediately.</strong></li>
+            <li>Terminate all active sessions for the user globally.</li>
+            <li>Execute the <strong>Account Compromise Workflow</strong>.</li>
+            <li>Perform a full audit of all actions taken during the session.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Privileged Access Management (PAM) logs (CyberArk, BeyondTrust)</li>
+        <li>VPN/MFA Authentication logs (Duo, Okta, Azure AD)</li>
+        <li>SIEM Search: <code>EventCode=4624 Logon_Type=10</code> (RDP) filtered by <code>Time_Range</code></li>
+        <li>EDR Process Trees (to see what scripts/tools were launched in the session)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Revoke access for unauthorized sessions immediately.</li>
+        <li>Identify any "backdoor" accounts or persistence created during the window.</li>
+        <li>Escalate confirmed unauthorized access to Incident Response (IR).</li>
+        <li>Update conditional access policies to further restrict off-hours privileged logins.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1078 (Valid Accounts)</li>
+        <li>NIST SP 800-53 – AC-2 (Account Management: Access Enforcement)</li>
+        <li>Internal On-Call and Emergency Change Management Policy</li>
+        <li>Privileged Access & Hygiene Standards</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>
