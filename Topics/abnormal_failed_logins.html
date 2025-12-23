@@ -2,145 +2,172 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Abnormal Failed Account Logins | Cybersecurity Analyst Handbook</title>
+  <title>Abnormal Account Login Activity – Analyst Handbook</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
-  <header>
-    <h1>Abnormal Failed Account Logins</h1>
-    <nav>
-      <a href="../index.html">Home</a> |
-      <a href="phishing_analysis.html">Next Topic</a>
-    </nav>
-  </header>
 
   <main>
-    <!-- Overview -->
+
+    <header>
+      <h1>Abnormal Account Login Activity</h1>
+    </header>
+
     <section id="overview">
       <h2>Overview</h2>
       <p>
-        This section covers detection, analysis, and remediation of abnormal failed account logins.
-        These events can indicate brute-force attempts, credential stuffing, or misconfigured applications.
+        This use case focuses on detecting and investigating abnormal authentication behavior,
+        specifically an unusual volume of failed login attempts against one or more user accounts.
+        These events may indicate brute-force attacks, password spraying, credential stuffing,
+        or misconfigured applications.
       </p>
     </section>
 
-    <!-- Attack Description -->
     <section id="attack-description">
       <h2>Attack Description</h2>
+      <p>
+        Adversaries commonly attempt to gain initial access by abusing authentication mechanisms.
+        This activity often manifests as repeated failed login attempts targeting individual
+        accounts or many accounts in quick succession.
+      </p>
       <ul>
-        <li><strong>Goal:</strong> Gain unauthorized access through repeated failed logins.</li>
-        <li><strong>Common Sources:</strong> External IPs, automated scripts, compromised devices.</li>
-        <li><strong>Indicators:</strong> High login failure rate, unusual user accounts, unusual user activity (same user across multiple devices).</li>
+        <li>Brute-force attempts against a single account</li>
+        <li>Password spraying across many accounts using one or few passwords</li>
+        <li>Credential stuffing using leaked username/password combinations</li>
+        <li>Automated tooling generating high-volume authentication failures</li>
       </ul>
     </section>
 
-    <!-- Detection Workflow -->
-    <section id="detection">
-      <h2>Detection Workflow</h2>
-      <ol>
-        <li>Identify patterns in authentication logs (e.g., multiple failures within a short window).</li>
-        <li>Correlate IPs, usernames, and timestamps across systems.</li>
-        <li>Check for known brute-force tools or login automation signatures.</li>
-        <li>Determine whether the failures are from valid users or external sources.</li>
-      </ol>
+    <section id="what-to-look-for">
+      <h2>What to Look For</h2>
+      <ul>
+        <li>3 or more failed authentication events within a short time window</li>
+        <li>Multiple user accounts targeted from a single source IP</li>
+        <li>Authentication failures followed by a successful login</li>
+        <li>Unusual geolocation or ASN for the user account</li>
+        <li>Repeated failures against high-value or privileged accounts</li>
+      </ul>
     </section>
 
     <section id="workflow">
-  <h2>Analysis Workflow</h2>
-  <p>Use this guided workflow to triage abnormal failed account logins based on context and source.</p>
+      <h2>Investigation Workflow</h2>
 
-  <div class="workflow">
+      <h3>Abnormal Amount of Failed Logins</h3>
 
-    <div class="step-question">Local Logon Type?</div>
-    <div class="step-answer">
-      <p><strong>Yes:</strong></p>
+      <h4>Identify the Targeted Account(s)</h4>
       <ul>
-        <li>Check for repeated failed logins from the same workstation.</li>
-        <li>Contact system owner, AO help-desk, or section.</li>
-        <li>Verify if the user recently changed passwords or had lockouts.</li>
-        <li>Identify reason for failed logins.</li>
+        <li>
+          <strong>Single account targeted</strong>
+          <ul>
+            <li>Determine if the account is high-value (administrator, service account, executive)</li>
+            <li>Review recent successful logins for the account</li>
+            <li>Verify account status (active, disabled, locked)</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Multiple accounts targeted</strong>
+          <ul>
+            <li>Identify patterns (sequential usernames, alphabetical ordering, random selection)</li>
+            <li>Assess for password spray indicators</li>
+            <li>List all targeted accounts for continued monitoring</li>
+          </ul>
+        </li>
       </ul>
 
-      <p><strong>No:</strong></p>
-    </div>
-
-    <div class="step-question">From a trusted network?</div>
-    <div class="step-answer">
-      <p><strong>Yes:</strong></p>
+      <h4>Identify the Source</h4>
       <ul>
-        <li>Contact network owner and identify reason for activity.</li>
-        <li>Review system and user activity logs for internal threat indicators.</li>
-        <li>Validate external network ability/reason for access.</li>
+        <li>
+          <strong>Internal source</strong>
+          <ul>
+            <li>Verify legitimacy of the source system</li>
+            <li>Check for signs of compromised credentials or malware on the source</li>
+            <li>Interview the user if applicable</li>
+          </ul>
+        </li>
+        <li>
+          <strong>External source</strong>
+          <ul>
+            <li>Check threat intelligence for known malicious IPs or infrastructure</li>
+            <li>Review geolocation and ASN of the source</li>
+            <li>Identify use of VPNs, proxies, or anonymization services</li>
+          </ul>
+        </li>
       </ul>
 
-      <p><strong>No:</strong></p>
-    </div>
-
-    <div class="step-question">Happen across multiple machines?</div>
-    <div class="step-answer">
-      <p><strong>Yes:</strong></p>
+      <h4>Was the Attack Successful?</h4>
       <ul>
-        <li>Determine if malicious application caused failure.</li>
-        <li>Determine if network or application authentication caused failures.</li>
-        <li>Determine if successful login occurred.</li>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Immediately escalate to Incident Response</li>
+            <li>Initiate account compromise workflow</li>
+            <li>Consider disabling or resetting the affected account(s)</li>
+            <li>Review all activity from the successful login forward</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Document failed attempt count and timeframe</li>
+            <li>Determine whether account lockout occurred</li>
+            <li>Continue monitoring for 24–48 hours</li>
+          </ul>
+        </li>
       </ul>
 
-      <p><strong>No:</strong></p>
-    </div>
-
-    <div class="step-question">Is this an incident?</div>
-    <div class="step-answer">
-      <p><strong>Yes:</strong></p>
+      <h4>Is This Expected Behavior?</h4>
       <ul>
-        <li>Gather artifacts (logs, affected hosts, malicious application, source IP address(es)).</li>
-        <li>Prepare cyber 9-line.</li>
-        <li>Senior CND analyst review.</li>
+        <li>
+          <strong>Yes</strong>
+          <ul>
+            <li>Document the reason for the false positive (forgotten password, misconfiguration)</li>
+            <li>Adjust alert thresholds if appropriate</li>
+            <li>Close the alert</li>
+          </ul>
+        </li>
+        <li>
+          <strong>No</strong>
+          <ul>
+            <li>Request senior analyst review</li>
+            <li>Escalate if thresholds are exceeded or behavior is concerning</li>
+          </ul>
+        </li>
       </ul>
 
-      <p><strong>No:</strong></p>
-      <ul>
-        <li>Senior CND analyst review.</li>
-        <li>Determine false positives and eliminate them.</li>
-      </ul>
-    </div>
+    </section>
 
-  </div>
-
-
-    <!-- Tools & Queries -->
-    <section id="tools">
+    <section id="tools-queries">
       <h2>Tools & Queries</h2>
-      <pre><code class="language-kql">
-*need to fill in later*
-      </code></pre>
+      <ul>
+        <li>Elastic</li>
+          <li>user.name : joe.duffy and event.code : 4624</li>
+        <li>Elastic Discover for authentication event analysis</li>
+        <li>Threat intelligence platforms (IP reputation, ASN lookup)</li>
+        <li>Identity provider logs (AD, Azure AD, Okta, etc.)</li>
+      </ul>
     </section>
 
-    <!-- Response Workflow -->
-    <section id="response">
+    <section id="response-workflow">
       <h2>Response Workflow</h2>
-      <ol>
-        <li>Senior CND analyst review.</li>
-        <li>Escalate to SSS for account validation and review.</li>
-        <li>Block malicious IP addresses.</li>
-        <li>Force password resets if credential compromise is suspected.</li>
-        <li>Gather artifacts (logs, affected accounts, affected computers, source IP addr, etc.)</li>
-      </ol>
+      <ul>
+        <li>Notify Incident Response for confirmed compromise</li>
+        <li>Disable or reset compromised accounts</li>
+        <li>Force password resets where appropriate</li>
+        <li>Implement temporary IP blocks or conditional access controls</li>
+        <li>Document findings and actions taken</li>
+      </ul>
     </section>
 
-    <!-- References -->
     <section id="references">
       <h2>References</h2>
       <ul>
-        <li><a href="https://attack.mitre.org/techniques/T1110/">MITRE ATT&CK: Brute Force (T1110)</a></li>
-        <li><a href="https://owasp.org/">OWASP Authentication Cheat Sheet</a></li>
+        <li>MITRE ATT&CK: Credential Access & Initial Access techniques</li>
+        <li>NIST SP 800-53 – Identification and Authentication</li>
+        <li>Internal SOC Playbooks and IR Procedures</li>
       </ul>
     </section>
+
   </main>
 
-  <footer>
-    <p>&copy; 2025 Cybersecurity Analyst Handbook</p>
-  </footer>
 </body>
 </html>
