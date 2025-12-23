@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Large Data Transfers – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Large Data Transfers</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Large data transfers (Data Heaviness) involve significant volumes of data moving across
+        network boundaries. This workflow helps distinguish between legitimate business operations
+        (backups, updates) and potential <strong>Data Exfiltration</strong> or <strong>Staging</strong>.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries often aggregate data into large archives before moving them to external repositories.
+        Detection depends on monitoring for deviations from established traffic baselines for specific users or hosts.
+      </p>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Characterize the Transfer</h3>
+      <h4>Direction and Volume</h4>
+      <ul>
+        <li><strong>Outbound (Upload):</strong> High concern for exfiltration. Compare against the 7-day or 30-day average.</li>
+        <li><strong>Inbound (Download):</strong> Large software updates or patches. Potential for "ingress" of large malicious toolsets.</li>
+        <li><strong>Internal (Lateral):</strong> Possible data staging; moving data from multiple hosts to a central collection point.</li>
+      </ul>
+
+      <h4>Identify the Destination</h4>
+      <ul>
+        <li><strong>Sanctioned Cloud:</strong> (OneDrive, SharePoint, AWS) Verify if the user/system is authorized for this volume.</li>
+        <li><strong>Unsanctioned Site:</strong> (Mega.nz, WeTransfer, Personal Dropbox) High suspicion; often used for exfiltration.</li>
+        <li><strong>Unknown IP/Geo:</strong> Check IP reputation and geolocation for high-risk or sanctioned regions.</li>
+      </ul>
+
+      <h3>Identify the Source and User</h3>
+      <ul>
+        <li><strong>System Type:</strong> A Database server uploading 50GB is more critical than a Creative Dept workstation uploading video files.</li>
+        <li><strong>User Context:</strong> Is the user currently on shift? Does this align with their job role?</li>
+        <li><strong>Process Activity:</strong> Check EDR logs for file compression tools (<code>7z.exe</code>, <code>WinRAR.exe</code>, <code>tar</code>) running prior to the transfer.</li>
+      </ul>
+
+      <h3>Determine Legitimacy</h3>
+      <ul>
+        <li><strong>Scheduled Tasks:</strong> Check for active backup windows, cloud syncs, or database replications.</li>
+        <li><strong>Approved Projects:</strong> Contact the user or manager to verify if a large data migration was planned.</li>
+        <li><strong>Anomalous Activity:</strong> If no business justification is found and the destination is suspicious, proceed to response.</li>
+      </ul>
+
+      <h3>Response Actions</h3>
+      <ul>
+        <li><strong>Containment:</strong> Kill active network sessions or block the destination URL/IP at the proxy/firewall.</li>
+        <li><strong>Evidence Preservation:</strong> Capture netflow data and proxy logs. If internal, capture file-access audit logs.</li>
+        <li><strong>Escalation:</strong> If the data is suspected to be PII, PHI, or IP, trigger the <strong>Data Exfiltration Playbook</strong> and notify Legal/Compliance.</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>NetFlow Analysis (Top Talkers by volume)</li>
+        <li>Proxy/Web Gateway Logs (Look for <code>PUT</code> or <code>POST</code> methods)</li>
+        <li>EDR (Look for large file reads or compression processes)</li>
+        <li>DLP (Data Loss Prevention) Console</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – TA0010 (Exfiltration)</li>
+        <li>NIST SP 800-88 – Guidelines for Media Sanitization</li>
+        <li>Internal Data Handling and Acceptable Use Policies</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

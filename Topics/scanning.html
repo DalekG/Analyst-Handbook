@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Port Scanning – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Port Scanning</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Port scanning is a reconnaissance technique used to identify open ports and active services on a host.
+        In a SOC environment, this often indicates the <strong>Discovery</strong> phase of an attack, where an
+        adversary (or a compromised internal host) is mapping the network to find vulnerable entry points.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries use scanning to determine which services are listening and what operating systems are in use.
+        As of 2025, modern scanners often use "low and slow" techniques or AI-driven randomization to evade
+        threshold-based IDS alerts.
+      </p>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Scanner</h3>
+      <h4>Internal or External Source?</h4>
+      <ul>
+        <li>
+          <strong>Internal IP:</strong>
+          <ul>
+            <li>High concern; may indicate a compromised workstation or a malicious insider.</li>
+            <li>Identify the asset owner and current logged-in user.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>External IP:</strong>
+          <ul>
+            <li>Check reputation via threat intel (VirusTotal, GreyNoise).</li>
+            <li>Determine if this is "internet noise" or a targeted scan against corporate assets.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h4>What is the Scan Type?</h4>
+      <ul>
+        <li><strong>Horizontal Scan:</strong> Scanning many different IPs for a single specific port (e.g., searching for any RDP 3389).</li>
+        <li><strong>Vertical Scan:</strong> Scanning a single IP for many different ports (mapping out a specific server).</li>
+        <li><strong>Strobe Scan:</strong> Rapidly hitting a small set of commonly exploited ports across many systems.</li>
+      </ul>
+
+      <h3>Analyze the Target(s)</h3>
+      <ul>
+        <li><strong>Specific Target:</strong> Is a critical asset (DC, Database, Web Server) being targeted?</li>
+        <li><strong>Broad Sweep:</strong> Is the scanner hitting an entire subnet or VLAN?</li>
+        <li><strong>Result of Scan:</strong> Did the scanner identify open ports? Check firewall/host logs for "Accept" vs. "Deny" actions.</li>
+      </ul>
+
+      <h3>Determine Legitimacy</h3>
+      <h4>Is this an authorized scan?</h4>
+      <ul>
+        <li><strong>Vulnerability Management:</strong> Check if a scheduled scan (Nessus, Qualys, Rapid7) is active.</li>
+        <li><strong>IT/NetOps Troubleshooting:</strong> Verify if a team member is testing connectivity or performing an audit.</li>
+        <li><strong>No Change Ticket:</strong> If no authorization is found, treat as unauthorized/malicious.</li>
+      </ul>
+
+      <h3>Response Actions</h3>
+      <ul>
+        <li>
+          <strong>Internal Source:</strong>
+          <ul>
+            <li>Isolate the host immediately.</li>
+            <li>Review EDR logs to find the scanning binary (e.g., <code>nmap.exe</code>, <code>Advanced Port Scanner</code>, or custom scripts).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>External Source:</strong>
+          <ul>
+            <li>Block the source IP at the perimeter firewall.</li>
+            <li>Update IDS/IPS blacklists and blocklists.</li>
+          </ul>
+        </li>
+        <li><strong>Escalation:</strong> If the scan targets Tier-0 assets or originates from a high-privilege account, escalate to IR.</li>
+      </ul>
+
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Firewall Logs (Check for many "Deny" events from one source)</li>
+        <li>SIEM Search: <code>stats dc(dest_port) as port_count by src_ip | where port_count > 25</code></li>
+        <li>IDS/IPS Alerts (Snort/Suricata scanning signatures)</li>
+        <li>Nmap/Scanners logs</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1595 (Active Scanning)</li>
+        <li>NIST SP 800-94 – Guide to IDPS</li>
+        <li>Internal Vulnerability Management Schedule</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>
