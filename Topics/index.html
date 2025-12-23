@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Analyst Handbook</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h3>Security Analyst Handbook</h3>
+            <p class="subtitle">Event Analysis Workflows and Response Procedures</p>
+        </header>
+
+        <section class="intro">
+            <h2>Introduction</h2>
+            <p>This handbook provides comprehensive workflows and response procedures for security analysts investigating common events and alerts within Elastic and other security monitoring platforms.</p>
+            <p>Each workflow is designed to guide analysts through a systematic approach to:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>Identifying and characterizing security events</li>
+                <li>Determining the scope and impact of incidents</li>
+                <li>Making critical decisions about escalation and response</li>
+                <li>Executing appropriate containment and remediation actions</li>
+            </ul>
+            <p style="margin-top: 10px;">Use this handbook as a reference guide during incident triage and response. Each workflow follows a decision-tree format to help you systematically investigate events and determine the appropriate course of action.</p>
+        </section>
+
+        <section>
+            <h2>Event Index</h2>
+            <div class="index">
+                <div class="category">
+                    <h4>Authentication & Access</h4>
+                    <ul>
+                        <li><a href="#abnormal-failed-logins">Abnormal Amount of Failed Logins</a></li>
+                        <li><a href="#account-compromise">Account Compromise</a></li>
+                        <li><a href="#unusual-account-creation">Unusual Account Creation</a></li>
+                        <li><a href="#privilege-escalation">Privilege Escalation Attempts</a></li>
+                        <li><a href="#default-credentials">Use of Default or Weak Credentials</a></li>
+                        <li><a href="#dormant-account">Dormant Account Reactivation</a></li>
+                        <li><a href="#after-hours-access">After-Hours Access from Privileged Accounts</a></li>
+                        <li><a href="#impossible-travel">Access from Impossible Travel Locations</a></li>
+                        <li><a href="#multiple-accounts">Multiple Accounts Accessed from Single Source</a></li>
+                        <li><a href="#success-multiple-failures">Successful Login After Multiple Failures</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>Network & Traffic</h4>
+                    <ul>
+                        <li><a href="#unknown-traffic">Unknown Traffic</a></li>
+                        <li><a href="#unusual-network-activity">Unusual Network Activity</a></li>
+                        <li><a href="#beaconing">Beaconing Activity</a></li>
+                        <li><a href="#scanning">Port Scanning</a></li>
+                        <li><a href="#transfers">Large Data Transfers</a></li>
+                        <li><a href="#maliciousIPDomain">Connection to Known Malicious IP/Domain</a></li>
+                        <li><a href="#nonstandard-ports">Use of Non-Standard Ports</a></li>
+                        <li><a href="#latmovement">Lateral Movement Indicators</a></li>
+                        <li><a href="#dns-enumeration">DNS Enumeration</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>Email Security</h4>
+                    <ul>
+                        <li><a href="#unusual-email">Unusual Email</a></li>
+                        <li><a href="#phishing">Phishing Indicators</a></li>
+                        <li><a href="#emailforward">Email Forwarding</a></li>
+                        <li><a href="#suspiciousAttachment">Suspicious Attachment Types</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>Application & Service Activity</h4>
+                    <ul>
+                        <li><a href="#unusual-application-activity">Unusual Application Activity</a></li>
+                        <li><a href="#unusual-remote-service">Unusual Remote Service Activity</a></li>
+                        <li><a href="#rdp-ssh">RDP/SSH Brute Force Attempts</a></li>
+                        <li><a href="#webapp">Web App Attacks</a></li>
+                        <li><a href="#apiabuse">API Abuse or Anomolies</a></li>
+                        <li><a href="#service-account">Service Account Misuse</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>Data Protection</h4>
+                    <ul>
+                        <li><a href="#credential-dumping">Credential Dumping</a></li>
+                        <li><a href="#data-exfiltration">Data Exfiltration</a></li>
+                        <li><a href="#sens-file">Sensitive File Access</a></li>
+                        <li><a href="#removable-media">Removable Media Usage</a></li>
+                        <li><a href="#print-spooler">Print Spooler Abuse</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>Availability & Operations</h4>
+                    <ul>
+                        <li><a href="#denial-of-service">Denial of Service</a></li>
+                        <li><a href="#resource-exhaustion">Resource Exhaustion</a></li>
+                        <li><a href="#service-crash">Service Crash or Failures</a></li>
+                    </ul>
+                </div>
+
+                <div class="category">
+                    <h4>General</h4>
+                    <ul>
+                        <li><a href="#alert-triage">Alert Triage</a></li>
+                        <li><a href="#kve">Known Vulnerbility Exploits</a></li>
+                        <li><a href="#insider-threat">Insider Threat Indicators</a></li>
+                        <li><a href="#policy-violations">Policy Violations</a></li>
+                        <li><a href="#securitychanges">Changes to Security Controls</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Security Analyst Handbook | Last Updated: December 2025</p>
+        </footer>
+    </div>
+</body>
+</html>

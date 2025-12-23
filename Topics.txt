@@ -1,0 +1,102 @@
+Authentication & Access Events:
+
+Abnormal amount of failed logins (you have this)
+Account compromise (you have this)
+Unusual account creation (you have this)
+Privilege escalation attempts
+Use of default or weak credentials
+Dormant account reactivation
+After-hours access from privileged accounts
+Access from impossible travel locations
+Multiple accounts accessed from single source
+Successful login after multiple failures
+
+Network & Traffic Analysis:
+
+Unknown traffic (you have this)
+Unusual network activity (you have this)
+Beaconing activity (periodic callbacks)
+Port scanning
+Large data transfers (internal or external)
+Connection to known malicious IPs/domains
+Use of non-standard ports
+Lateral movement indicators
+Unauthorized VPN connections
+TOR or proxy usage
+
+DNS & Web Activity:
+
+DNS enumeration (you have this)
+DNS tunneling
+Domain generation algorithm (DGA) activity
+Newly registered domain connections
+Fast flux DNS patterns
+
+Email Security:
+
+Unusual email (you have this)
+Phishing indicators
+Business email compromise (BEC)
+Email forwarding rule creation
+Mass email distribution
+Suspicious attachment types
+
+Malware & Execution:
+
+Malware detection alerts
+Suspicious process execution
+PowerShell/command line obfuscation
+Living-off-the-land binaries (LOLBins) usage
+Unsigned or suspicious binary execution
+Persistence mechanism creation
+DLL hijacking
+
+Data Protection:
+
+Data exfiltration (you have this)
+Credential dumping (you have this)
+Sensitive file access
+Cloud storage uploads
+Removable media usage
+Print spooler abuse
+
+Application & Service Activity:
+
+Unusual application activity (you have this)
+Unusual remote service activity (you have this)
+RDP/SSH brute force attempts
+Web application attacks (SQLi, XSS, etc.)
+API abuse or anomalies
+Service account misuse
+
+System & Endpoint Events:
+
+Registry modifications
+Scheduled task creation
+Service installation or modification
+Driver loading
+Windows event log clearing
+Shadow copy deletion
+Disabling security tools
+
+Cloud & SaaS:
+
+Unusual cloud console access
+Cloud resource provisioning
+Permission changes in cloud environments
+OAuth token abuse
+Multi-factor authentication bypass attempts
+
+Availability:
+
+Denial of service (you have this)
+Resource exhaustion
+Service crashes or failures
+
+General:
+
+Alert triage (you have this)
+Known vulnerability exploitation
+Insider threat indicators
+Policy violations
+Configuration changes to security controls

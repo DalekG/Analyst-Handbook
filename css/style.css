@@ -22,6 +22,11 @@ h1, h2 {
   margin-top: 0;
 }
 
+h3 {
+  color: #E3DCC3;
+  margin-top: 0;
+}
+
 /* === Navigation Links (Header/Footer) === */
 header a, footer a {
   color: #E3DCC3; /* light tan-green for links */
