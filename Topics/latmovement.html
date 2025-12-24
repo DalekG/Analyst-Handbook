@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lateral Movement – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Lateral Movement Indicators</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Lateral movement encompasses techniques used by adversaries to move through an environment after
+        gaining initial access. The SOC looks for atypical internal connections, credential harvesting,
+        and remote execution attempts targeting high-value assets like Domain Controllers or Database Servers.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Once an attacker has a foothold, they must move "laterally" to find their target. Indicators include:
+      </p>
+      <ul>
+        <li><strong>Remote Service Abuse:</strong> Misusing RDP, SSH, or SMB to access other internal hosts.</li>
+        <li><strong>Remote Execution:</strong> Using tools like WMI, WinRM, or PsExec to run code on target systems.</li>
+        <li><strong>Credential Replay:</strong> Using stolen hashes (Pass-the-Hash) or tickets (Pass-the-Ticket) to authenticate.</li>
+        <li><strong>Internal Reconnaissance:</strong> Scanning the internal network from a compromised workstation.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify Movement Technique</h3>
+      <ul>
+        <li><strong>Remote Service Abuse:</strong> Look for RDP, SSH, or SMB connections between workstations (atypical P2P traffic).</li>
+        <li><strong>Remote Execution:</strong> Audit <code>WMI</code>, <code>WinRM</code>, or <code>PsExec</code> activity.</li>
+        <li><strong>Service Creation:</strong> Check for Event ID 7045 (New Service) following a remote login.</li>
+      </ul>
+
+      <h3>Trace the Source ("Patient Zero")</h3>
+      <ul>
+        <li>Identify the source IP/Hostname of the movement attempt.</li>
+        <li>Analyze how the source host was compromised (e.g., check for initial phishing or web exploit).</li>
+      </ul>
+
+      <h3>Identify Credential Usage</h3>
+      <ul>
+        <li><strong>Privilege Check:</strong> Is the actor using a service account or a domain admin account to move?</li>
+        <li><strong>Success vs. Failure:</strong> Multiple login failures followed by one success suggests <strong>Brute Force</strong> or <strong>Credential Replay</strong>.</li>
+      </ul>
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>BloodHound (Visualize attack paths to Domain Admins)</li>
+        <li>Windows Events: 4624 (Logon), 4697 (Service Install), 4648 (Explicit Credentials)</li>
+        <li>EDR Process Trees (Look for <code>cmd.exe /c</code> or <code>powershell -enc</code> spawning from system processes)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Isolate the "Patient Zero" host and any destination hosts touched by the actor.</li>
+        <li>Disable compromised accounts and force global password resets for affected users.</li>
+        <li>Clear all active Kerberos tickets and sessions across the network for involved accounts.</li>
+        <li>Remove unauthorized services, scheduled tasks, or registry persistence.</li>
+        <li>Escalate to IR for a full environment-wide compromise assessment.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – TA0008 (Lateral Movement)</li>
+        <li>MITRE ATT&CK – T1021 (Remote Services)</li>
+        <li>Microsoft - Best Practices for Securing Privileged Access</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

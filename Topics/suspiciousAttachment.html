@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Suspicious Email Attachment Types – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Suspicious Email Attachment Types</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Adversaries frequently use email attachments to deliver malware or establish initial access. As of 2025,
+        attackers have shifted away from simple executables toward complex file formats that can bypass
+        Secure Email Gateways (SEGs) and "Mark of the Web" (MotW) security warnings.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        The goal of a malicious attachment is to execute code on the endpoint. Current high-risk formats include:
+      </p>
+      <ul>
+        <li><strong>Container Files:</strong> (ISO, IMG, VHD) Used to wrap malicious payloads to evade scanning.</li>
+        <li><strong>Compressed Archives:</strong> (ZIP, 7Z, RAR) Often password-protected to prevent the gateway from inspecting contents.</li>
+        <li><strong>Script Files:</strong> (LNK, JS, VBS, PS1) Designed to trigger automated downloaders or "Living off the Land" commands.</li>
+        <li><strong>HTML Smuggling:</strong> (HTML, HTM) Using Javascript to "build" a malware file locally on the victim's machine.</li>
+        <li><strong>OneNote/PDF:</strong> Exploiting embedded links or objects within seemingly benign documents.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Identify the Attachment Type</h3>
+      <h4>High-Risk Categories</h4>
+      <ul>
+        <li><strong>Executables/Scripts:</strong> .exe, .scr, .vbs, .js, .bat, .cmd, .ps1</li>
+        <li><strong>Office Documents:</strong> .docm, .xlsm, .pptm (Macro-enabled)</li>
+        <li><strong>Disk Images:</strong> .iso, .img, .vhd, .vhdx</li>
+        <li><strong>Compressed/Encrypted:</strong> .zip, .7z, .rar, .ace</li>
+        <li><strong>Shortcut/Configuration:</strong> .lnk, .url, .inf</li>
+      </ul>
+
+      <h3>Analyze File Metadata</h3>
+      <ul>
+        <li><strong>True File Type:</strong> Does the extension match the magic bytes (MIME type)? (e.g., a .pdf that is actually an .exe).</li>
+        <li><strong>File Hash:</strong> Check SHA-256 on VirusTotal. Note that unique/custom malware will have no hits.</li>
+        <li><strong>Signatures:</strong> Is the file digitally signed? Check for revoked or suspicious certificates.</li>
+      </ul>
+
+      <h3>Assess Delivery Context</h3>
+      <ul>
+        <li><strong>Sender Reputation:</strong> Is the attachment from an external source? Is the SPF/DKIM status "Pass"?</li>
+        <li><strong>Naming Convention:</strong> Does the name induce urgency or mimic business docs (e.g., <code>Invoice_9923.iso</code>)?</li>
+        <li><strong>Password Protection:</strong> If an archive is encrypted, was the password provided in the email body? (High Suspicion).</li>
+      </ul>
+
+      <h3>Determine Impact</h3>
+      <h4>Has the file been executed?</h4>
+      <ul>
+        <li><strong>EDR Correlation:</strong> Check for process creation events (Event ID 1) linked to the file name.</li>
+        <li><strong>File System:</strong> Check for file writes in <code>\Downloads\</code> or <code>\AppData\Local\Temp\</code>.</li>
+        <li><strong>User Behavior:</strong> Did the user attempt to open the file? Review endpoint telemetry for suspicious child processes (e.g., <code>outlook.exe</code> spawning <code>cmd.exe</code>).</li>
+      </ul>
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Static Analysis: PEStudio, Detect It Easy (DIE)</li>
+        <li>Dynamic Analysis: Any.Run, Joe Sandbox, Hatching Triage</li>
+        <li>SIEM Search: <code>sourcetype="m365:email" attachment_name="*.iso" OR attachment_name="*.lnk"</code></li>
+        <li>EDR Search: <code>file.path : "*\AppData\Local\Microsoft\Windows\INetCache\*"</code></li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li><strong>Quarantine:</strong> Remove the email and attachment from all user mailboxes.</li>
+        <li><strong>Isolate:</strong> Contain any endpoint where the attachment was successfully opened/executed.</li>
+        <li><strong>Block:</strong> Add the file hash to the EDR blocklist and the sender's domain to the SEG blocklist.</li>
+        <li><strong>Remediate:</strong> Delete temporary files and registry keys created during execution.</li>
+        <li><strong>Escalate:</strong> If the attachment is confirmed malware, initiate the <strong>Malware Outbreak</strong> playbook.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1204.002 (User Execution: Malicious File)</li>
+        <li>MITRE ATT&CK – T1027.006 (HTML Smuggling)</li>
+        <li>Internal Malware Analysis and Sandbox Procedures</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

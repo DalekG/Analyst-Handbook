@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Malicious Connection – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Connection to Known Malicious IP or Domain</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        This alert triggers when an internal asset attempts to communicate with external infrastructure
+        already flagged by threat intelligence as malicious. As of 2025, these connections often represent
+        active malware infections, Command and Control (C2) check-ins, or a user being redirected to
+        a phishing landing page.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries leverage pre-configured infrastructure to manage compromised hosts. Connections to
+        known malicious destinations typically indicate:
+      </p>
+      <ul>
+        <li><strong>C2 Communication:</strong> Malware receiving instructions from a remote server.</li>
+        <li><strong>Phishing:</strong> A user's browser reaching out to a credential harvesting site.</li>
+        <li><strong>Exfiltration:</strong> Data being sent to a known "drop site" or malicious cloud storage.</li>
+        <li><strong>Infection Vector:</strong> A system attempting to download a second-stage payload.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Analyze Threat Intelligence</h3>
+      <ul>
+        <li><strong>Reputation Check:</strong> Is the IP/Domain flagged for Malware, Phishing, or C2?</li>
+        <li><strong>Confidence & Recency:</strong> Was the indicator flagged recently? High-confidence, active flags require immediate action.</li>
+      </ul>
+
+      <h3>Identify Source and Process</h3>
+      <ul>
+        <li><strong>Asset Identification:</strong> Retrieve Hostname, IP, and the current logged-in user.</li>
+        <li><strong>Process Attribution:</strong> Use EDR to find the binary initiating the connection (e.g., <code>powershell.exe</code>, <code>regsvr32.exe</code>, or a suspicious <code>.tmp</code> file).</li>
+      </ul>
+
+      <h3>Analyze Traffic Patterns</h3>
+      <ul>
+        <li><strong>Persistence:</strong> Is this a single request (Phishing click) or recurring (Beaconing)?</li>
+        <li><strong>Data Volume:</strong> Was any data uploaded to the malicious destination?</li>
+      </ul>
+
+      <h3>Determine Legitimacy</h3>
+      <ul>
+        <li><strong>False Positive:</strong> Is the IP part of a shared CDN (Cloudflare/Akamai) where only a specific sub-site is malicious?</li>
+        <li><strong>User Context:</strong> Was the user browsing the web or did a background process initiate this?</li>
+      </ul>
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Threat Intel (VirusTotal, GreyNoise, Cisco Talos)</li>
+        <li>EDR Process/Network Telemetry</li>
+        <li>DNS Logs (Check for Domain Generation Algorithm [DGA] patterns)</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Isolate the infected host via EDR containment.</li>
+        <li>Block the malicious IP/Domain at the perimeter firewall and web proxy.</li>
+        <li>Perform a full malware scan and memory analysis of the source system.</li>
+        <li>Initiate a password reset for the user if credentials were potentially sent.</li>
+        <li>Escalate to IR if data exfiltration or lateral movement is suspected.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1071 (Application Layer Protocol)</li>
+        <li>NIST SP 800-61 Rev. 2 – Incident Handling Guide</li>
+        <li>Internal Threat Intelligence Integration Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

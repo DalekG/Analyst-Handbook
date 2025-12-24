@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Non-Standard Ports – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Use of Non-Standard Ports</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Non-standard port usage occurs when a protocol is used on a port other than its IANA-assigned standard
+        (e.g., SSH over port 443). Adversaries use this to evade simple port-filtering and hide C2 traffic
+        as legitimate web or DNS traffic, hoping SOC analysts only monitor standard ports.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries leverage non-standard ports to bypass security controls that do not perform protocol
+        validation or Deep Packet Inspection (DPI). Common techniques include:
+      </p>
+      <ul>
+        <li><strong>Port Tunneling:</strong> Running forbidden protocols (SSH, RDP) over ports like 80 or 443.</li>
+        <li><strong>Evasion:</strong> Using high-numbered random ports for C2 to avoid triggering IDS signatures.</li>
+        <li><strong>Backdoors:</strong> Establishing a persistent listener on an obscure port for remote access.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Characterize the Traffic</h3>
+      <ul>
+        <li><strong>Protocol Identification:</strong> Use DPI to see if the traffic "matches" the port (e.g., is it actually TLS over port 80?).</li>
+        <li><strong>Common Malicious Pairs:</strong> SSH over 443, HTTP over 8080/8443, or C2 over high-numbered ports (49152+).</li>
+      </ul>
+
+      <h3>Analyze Initiating Process</h3>
+      <ul>
+        <li><strong>EDR Correlation:</strong> Identify the process name and command-line arguments.</li>
+        <li><strong>Suspicious Binaries:</strong> Look for <code>netcat.exe</code>, <code>ncat</code>, <code>python</code>, or unknown binaries running network listeners.</li>
+      </ul>
+
+      <h3>Verify Business Need</h3>
+      <ul>
+        <li><strong>Server Baseline:</strong> Does this application normally use a custom port for API calls or updates?</li>
+        <li><strong>Change Management:</strong> Check for tickets authorizing custom port configurations for development or legacy apps.</li>
+      </ul>
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Zeek/Corelight (Protocol vs. Port mismatch logs)</li>
+        <li>SIEM Search: <code>dest_port NOT IN (80, 443, 53, 123, 3389)</code></li>
+        <li>EDR <code>netstat</code> telemetry</li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li>Block the unauthorized port/destination pair at the host or network level.</li>
+        <li>Kill the suspicious process initiating the connection.</li>
+        <li>Update the asset's behavioral profile if the port usage is legitimate.</li>
+        <li>Capture PCAP if the protocol is unknown to identify potential tunneling/exfiltration.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1571 (Non-Standard Port)</li>
+        <li>IANA Service Name and Transport Protocol Port Number Registry</li>
+        <li>Internal Network Firewall Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>

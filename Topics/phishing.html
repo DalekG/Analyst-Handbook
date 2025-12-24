@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phishing Email Indicators – Analyst Handbook</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <main>
+
+    <header>
+      <h1>Phishing Email Indicators</h1>
+    </header>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>
+        Phishing remains the primary initial access vector for adversaries in 2025. This workflow provides
+        a structured approach to analyzing suspicious emails, identifying malicious attachments or links,
+        and determining the scope of a potential credential harvest or malware delivery attempt.
+      </p>
+    </section>
+
+    <section id="attack-description">
+      <h2>Attack Description</h2>
+      <p>
+        Adversaries use deceptive emails to trick users into revealing sensitive information or executing
+        malicious code. Common techniques include:
+      </p>
+      <ul>
+        <li><strong>Business Email Compromise (BEC):</strong> Impersonating executives or vendors to authorize fraudulent payments.</li>
+        <li><strong>Credential Harvesting:</strong> Deceptive links to fake login portals (O365, Okta, VPN).</li>
+        <li><strong>Malware Delivery:</strong> Attachments (ISO, LNK, ZIP, HTML) containing first-stage loaders.</li>
+        <li><strong>Quishing:</strong> Using QR codes to bypass traditional email gateway URL filters.</li>
+      </ul>
+    </section>
+
+    <section id="workflow">
+      <h2>Investigation Workflow</h2>
+
+      <h3>Analyze Email Headers</h3>
+      <h4>Sender Authenticity</h4>
+      <ul>
+        <li><strong>Check Sender Address:</strong> Is the "Friendly From" name consistent with the actual email address?</li>
+        <li><strong>Review Domain:</strong> Look for look-alike domains (e.g., <code>rnicrosoft.com</code> vs. <code>microsoft.com</code>).</li>
+        <li><strong>Authentication Results:</strong> Verify SPF, DKIM, and DMARC status. A "Fail" or "Softfail" increases suspicion.</li>
+      </ul>
+
+      <h3>Analyze Content & Links</h3>
+      <h4>Deceptive Characteristics</h4>
+      <ul>
+        <li><strong>Urgency/Threats:</strong> Does the email demand immediate action (e.g., "Account Lockout", "Unpaid Invoice")?</li>
+        <li><strong>Hyperlinks:</strong> Hover over links to reveal the true destination. Is the URL shortened or hosted on a suspicious TLD (.top, .xyz, .pw)?</li>
+        <li><strong>Brand Spoofing:</strong> Are logos or signatures slightly off-color or low-resolution?</li>
+      </ul>
+
+      <h3>Analyze Attachments</h3>
+      <h4>Suspicious File Types</h4>
+      <ul>
+        <li><strong>Archives:</strong> (ZIP, 7Z, RAR) especially if password-protected to evade gateway scanning.</li>
+        <li><strong>Disk Images:</strong> (ISO, IMG, VHD) used to bypass Mark-of-the-Web (MotW) controls.</li>
+        <li><strong>HTML/HTM:</strong> Often used for "Local" phishing or redirecting to credential harvesters.</li>
+        <li><strong>Office Docs:</strong> Check for macros or embedded external references.</li>
+      </ul>
+
+      <h3>Determine Scope & Impact</h3>
+      <h4>Has the threat spread?</h4>
+      <ul>
+        <li><strong>Recipient List:</strong> Was this a targeted "Spear Phish" or a broad campaign sent to many users?</li>
+        <li><strong>User Interaction:</strong> Check proxy/web logs. Did any user click the link or download the file?</li>
+        <li><strong>Authentication Logs:</strong> Following a click, was there a successful login from an unusual IP?</li>
+      </ul>
+    </section>
+
+    <section id="tools-queries">
+      <h2>Tools &amp; Queries</h2>
+      <ul>
+        <li>Email Gateway Logs (Proofpoint, Mimecast, Defender for Office 365)</li>
+        <li>Header Analysis Tools (MXToolbox, MessageHeader)</li>
+        <li>URL/File Sandboxes (VirusTotal, Joe Sandbox, Any.Run)</li>
+        <li>SIEM Search: <code>sourcetype="email_logs" recipient_address="user@company.com"</code></li>
+      </ul>
+    </section>
+
+    <section id="response-workflow">
+      <h2>Response Workflow</h2>
+      <ul>
+        <li><strong>Purge:</strong> Remove the malicious email from all user inboxes globally.</li>
+        <li><strong>Block:</strong> Blacklist the sender's address, domain, and any identified URLs at the firewall/proxy.</li>
+        <li><strong>Contain:</strong> Isolate any host where an attachment was executed or a link was clicked.</li>
+        <li><strong>Credential Hygiene:</strong> Force password resets and revoke MFA tokens for users who interacted with the email.</li>
+        <li><strong>Awareness:</strong> If a broad campaign, issue a "Phish Alarm" notification to the organization.</li>
+      </ul>
+    </section>
+
+    <section id="references">
+      <h2>References</h2>
+      <ul>
+        <li>MITRE ATT&CK – T1566 (Phishing)</li>
+        <li>NIST SP 800-177 – Trustworthy Email Guide</li>
+        <li>Internal Email Security and Incident Reporting Policy</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+</html>
