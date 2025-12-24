@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Use of Non-Standard Ports</h1>
+      <h>Use of Non-Standard Ports</h>
     </header>
 
     <section id="overview">
@@ -38,19 +38,19 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Characterize the Traffic</h3>
+      <h4>Characterize the Traffic</h4>
       <ul>
         <li><strong>Protocol Identification:</strong> Use DPI to see if the traffic "matches" the port (e.g., is it actually TLS over port 80?).</li>
         <li><strong>Common Malicious Pairs:</strong> SSH over 443, HTTP over 8080/8443, or C2 over high-numbered ports (49152+).</li>
       </ul>
 
-      <h3>Analyze Initiating Process</h3>
+      <h4>Analyze Initiating Process</h4>
       <ul>
         <li><strong>EDR Correlation:</strong> Identify the process name and command-line arguments.</li>
         <li><strong>Suspicious Binaries:</strong> Look for <code>netcat.exe</code>, <code>ncat</code>, <code>python</code>, or unknown binaries running network listeners.</li>
       </ul>
 
-      <h3>Verify Business Need</h3>
+      <h4>Verify Business Need</h4>
       <ul>
         <li><strong>Server Baseline:</strong> Does this application normally use a custom port for API calls or updates?</li>
         <li><strong>Change Management:</strong> Check for tickets authorizing custom port configurations for development or legacy apps.</li>

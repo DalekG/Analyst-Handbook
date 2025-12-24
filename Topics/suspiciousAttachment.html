@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Suspicious Email Attachment Types</h1>
+      <h>Suspicious Email Attachment Types</h>
     </header>
 
     <section id="overview">
@@ -39,7 +39,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Identify the Attachment Type</h3>
+      <h4>Identify the Attachment Type</h4>
       <h4>High-Risk Categories</h4>
       <ul>
         <li><strong>Executables/Scripts:</strong> .exe, .scr, .vbs, .js, .bat, .cmd, .ps1</li>
@@ -49,21 +49,21 @@
         <li><strong>Shortcut/Configuration:</strong> .lnk, .url, .inf</li>
       </ul>
 
-      <h3>Analyze File Metadata</h3>
+      <h4>Analyze File Metadata</h4>
       <ul>
         <li><strong>True File Type:</strong> Does the extension match the magic bytes (MIME type)? (e.g., a .pdf that is actually an .exe).</li>
         <li><strong>File Hash:</strong> Check SHA-256 on VirusTotal. Note that unique/custom malware will have no hits.</li>
         <li><strong>Signatures:</strong> Is the file digitally signed? Check for revoked or suspicious certificates.</li>
       </ul>
 
-      <h3>Assess Delivery Context</h3>
+      <h4>Assess Delivery Context</h4>
       <ul>
         <li><strong>Sender Reputation:</strong> Is the attachment from an external source? Is the SPF/DKIM status "Pass"?</li>
         <li><strong>Naming Convention:</strong> Does the name induce urgency or mimic business docs (e.g., <code>Invoice_9923.iso</code>)?</li>
         <li><strong>Password Protection:</strong> If an archive is encrypted, was the password provided in the email body? (High Suspicion).</li>
       </ul>
 
-      <h3>Determine Impact</h3>
+      <h4>Determine Impact</h4>
       <h4>Has the file been executed?</h4>
       <ul>
         <li><strong>EDR Correlation:</strong> Check for process creation events (Event ID 1) linked to the file name.</li>

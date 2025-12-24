@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Large Data Transfers</h1>
+      <h>Large Data Transfers</h>
     </header>
 
     <section id="overview">
@@ -33,7 +33,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Characterize the Transfer</h3>
+      <h4>Characterize the Transfer</h4>
       <h4>Direction and Volume</h4>
       <ul>
         <li><strong>Outbound (Upload):</strong> High concern for exfiltration. Compare against the 7-day or 30-day average.</li>
@@ -48,21 +48,21 @@
         <li><strong>Unknown IP/Geo:</strong> Check IP reputation and geolocation for high-risk or sanctioned regions.</li>
       </ul>
 
-      <h3>Identify the Source and User</h3>
+      <h4>Identify the Source and User</h4>
       <ul>
         <li><strong>System Type:</strong> A Database server uploading 50GB is more critical than a Creative Dept workstation uploading video files.</li>
         <li><strong>User Context:</strong> Is the user currently on shift? Does this align with their job role?</li>
         <li><strong>Process Activity:</strong> Check EDR logs for file compression tools (<code>7z.exe</code>, <code>WinRAR.exe</code>, <code>tar</code>) running prior to the transfer.</li>
       </ul>
 
-      <h3>Determine Legitimacy</h3>
+      <h4>Determine Legitimacy</h4>
       <ul>
         <li><strong>Scheduled Tasks:</strong> Check for active backup windows, cloud syncs, or database replications.</li>
         <li><strong>Approved Projects:</strong> Contact the user or manager to verify if a large data migration was planned.</li>
         <li><strong>Anomalous Activity:</strong> If no business justification is found and the destination is suspicious, proceed to response.</li>
       </ul>
 
-      <h3>Response Actions</h3>
+      <h4>Response Actions</h4>
       <ul>
         <li><strong>Containment:</strong> Kill active network sessions or block the destination URL/IP at the proxy/firewall.</li>
         <li><strong>Evidence Preservation:</strong> Capture netflow data and proxy logs. If internal, capture file-access audit logs.</li>

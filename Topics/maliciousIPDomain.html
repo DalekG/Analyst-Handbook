@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Connection to Known Malicious IP or Domain</h1>
+      <h>Connection to Known Malicious IP or Domain</h>
     </header>
 
     <section id="overview">
@@ -40,25 +40,25 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Analyze Threat Intelligence</h3>
+      <h4>Analyze Threat Intelligence</h4>
       <ul>
         <li><strong>Reputation Check:</strong> Is the IP/Domain flagged for Malware, Phishing, or C2?</li>
         <li><strong>Confidence & Recency:</strong> Was the indicator flagged recently? High-confidence, active flags require immediate action.</li>
       </ul>
 
-      <h3>Identify Source and Process</h3>
+      <h4>Identify Source and Process</h4>
       <ul>
         <li><strong>Asset Identification:</strong> Retrieve Hostname, IP, and the current logged-in user.</li>
         <li><strong>Process Attribution:</strong> Use EDR to find the binary initiating the connection (e.g., <code>powershell.exe</code>, <code>regsvr32.exe</code>, or a suspicious <code>.tmp</code> file).</li>
       </ul>
 
-      <h3>Analyze Traffic Patterns</h3>
+      <h4>Analyze Traffic Patterns</h4>
       <ul>
         <li><strong>Persistence:</strong> Is this a single request (Phishing click) or recurring (Beaconing)?</li>
         <li><strong>Data Volume:</strong> Was any data uploaded to the malicious destination?</li>
       </ul>
 
-      <h3>Determine Legitimacy</h3>
+      <h4>Determine Legitimacy</h4>
       <ul>
         <li><strong>False Positive:</strong> Is the IP part of a shared CDN (Cloudflare/Akamai) where only a specific sub-site is malicious?</li>
         <li><strong>User Context:</strong> Was the user browsing the web or did a background process initiate this?</li>

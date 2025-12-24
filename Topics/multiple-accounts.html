@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Multiple Accounts Accessed from Single Source</h1>
+      <h>Multiple Accounts Accessed from Single Source</h>
     </header>
 
     <section id="overview">
@@ -39,7 +39,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Characterize the Pattern</h3>
+      <h4>Characterize the Pattern</h4>
       <h4>How many accounts are involved?</h4>
       <ul>
         <li><strong>2-5 Accounts:</strong> Possible legitimate administrative activity or user error; investigate context.</li>
@@ -55,7 +55,7 @@
         <li><strong>Related Accounts:</strong> (e.g., all in Finance) Could be a legitimate batch process; verify with the department lead.</li>
       </ul>
 
-      <h3>Identify the Source</h3>
+      <h4>Identify the Source</h4>
       <h4>Source location:</h4>
       <ul>
         <li><strong>Internal IP:</strong> Check the host for signs of compromise or unauthorized scanning tools.</li>
@@ -71,7 +71,7 @@
         <li><strong>Unknown System:</strong> Investigate immediately as a potential "Rogue Device" on the network.</li>
       </ul>
 
-      <h3>Analyze Authentication Pattern</h3>
+      <h4>Analyze Authentication Pattern</h4>
       <h4>Authentication method and timing:</h4>
       <ul>
         <li><strong>Method:</strong> Are all attempts using the same protocol (e.g., all RDP or all O365)?</li>
@@ -80,7 +80,7 @@
         <li><strong>Pattern Recognition:</strong> Check if usernames are targeted sequentially, alphabetically, or via dictionary.</li>
       </ul>
 
-      <h3>Were any authentications successful?</h3>
+      <h4>Were any authentications successful?</h4>
       <ul>
         <li>
           <strong>Yes:</strong>
@@ -100,7 +100,7 @@
         </li>
       </ul>
 
-      <h3>Execute Containment and Response</h3>
+      <h4>Execute Containment and Response</h4>
       <ul>
         <li><strong>Block the source IP</strong> at the perimeter firewall or internal access control lists (ACLs).</li>
         <li>Enable enhanced monitoring/logging for all targeted accounts.</li>

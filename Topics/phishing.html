@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Phishing Email Indicators</h1>
+      <h>Phishing Email Indicators</h>
     </header>
 
     <section id="overview">
@@ -39,7 +39,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Analyze Email Headers</h3>
+      <h4>Analyze Email Headers</h4>
       <h4>Sender Authenticity</h4>
       <ul>
         <li><strong>Check Sender Address:</strong> Is the "Friendly From" name consistent with the actual email address?</li>
@@ -47,7 +47,7 @@
         <li><strong>Authentication Results:</strong> Verify SPF, DKIM, and DMARC status. A "Fail" or "Softfail" increases suspicion.</li>
       </ul>
 
-      <h3>Analyze Content & Links</h3>
+      <h4>Analyze Content & Links</h4>
       <h4>Deceptive Characteristics</h4>
       <ul>
         <li><strong>Urgency/Threats:</strong> Does the email demand immediate action (e.g., "Account Lockout", "Unpaid Invoice")?</li>
@@ -55,7 +55,7 @@
         <li><strong>Brand Spoofing:</strong> Are logos or signatures slightly off-color or low-resolution?</li>
       </ul>
 
-      <h3>Analyze Attachments</h3>
+      <h4>Analyze Attachments</h4>
       <h4>Suspicious File Types</h4>
       <ul>
         <li><strong>Archives:</strong> (ZIP, 7Z, RAR) especially if password-protected to evade gateway scanning.</li>
@@ -64,7 +64,7 @@
         <li><strong>Office Docs:</strong> Check for macros or embedded external references.</li>
       </ul>
 
-      <h3>Determine Scope & Impact</h3>
+      <h4>Determine Scope & Impact</h4>
       <h4>Has the threat spread?</h4>
       <ul>
         <li><strong>Recipient List:</strong> Was this a targeted "Spear Phish" or a broad campaign sent to many users?</li>

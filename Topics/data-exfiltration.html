@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Data Exfiltration</h1>
+      <h>Data Exfiltration</h>
     </header>
 
     <section id="overview">
@@ -35,7 +35,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Identify the Data Transfer Characteristics</h3>
+      <h4>Identify the Data Transfer Characteristics</h4>
       <h4>Volume of data:</h4>
       <ul>
         <li><strong>Large Single Transfer:</strong> Suggests a direct, targeted exfiltration attempt.</li>
@@ -51,7 +51,7 @@
         <li><strong>Unknown Destination:</strong> Investigate immediately via threat intelligence sources.</li>
       </ul>
 
-      <h3>Identify Source and Method</h3>
+      <h4>Identify Source and Method</h4>
       <h4>What system is the source?</h4>
       <ul>
         <li><strong>Server with Sensitive Data:</strong> High concern; potential database compromise.</li>
@@ -68,7 +68,7 @@
         <li><strong>Cloud Sync:</strong> Check for unauthorized synchronization tools or personal accounts linked to corporate data.</li>
       </ul>
 
-      <h3>Identify What Data Is Being Transferred</h3>
+      <h4>Identify What Data Is Being Transferred</h4>
       <h4>Can you determine data type?</h4>
       <ul>
         <li>Run DLP analysis on the traffic or available logs if possible.</li>
@@ -84,7 +84,7 @@
         <li><strong>Classified:</strong> Critical concern; engage appropriate authorities immediately.</li>
       </ul>
 
-      <h3>Is this Authorized Activity?</h3>
+      <h4>Is this Authorized Activity?</h4>
       <ul>
         <li>
           <strong>Yes (Approved cloud backup, authorized file transfer, business need):</strong>
@@ -102,7 +102,7 @@
         </li>
       </ul>
 
-      <h3>Execute Containment</h3>
+      <h4>Execute Containment</h4>
       <h4>If transfer ongoing:</h4>
       <ul>
         <li>Block the destination IP/URL at the firewall/proxy immediately.</li>
@@ -124,7 +124,7 @@
         <li>Assess if destination is attacker-controlled infrastructure.</li>
       </ul>
 
-      <h3>Assess Impact and Respond</h3>
+      <h4>Assess Impact and Respond</h4>
       <ul>
         <li>Determine what data was successfully exfiltrated (the scope of the breach).</li>
         <li>Identify all potentially affected individuals/customers.</li>

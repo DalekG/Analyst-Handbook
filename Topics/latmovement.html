@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Lateral Movement Indicators</h1>
+      <h>Lateral Movement Indicators</h>
     </header>
 
     <section id="overview">
@@ -38,20 +38,20 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Identify Movement Technique</h3>
+      <h4>Identify Movement Technique</h4>
       <ul>
         <li><strong>Remote Service Abuse:</strong> Look for RDP, SSH, or SMB connections between workstations (atypical P2P traffic).</li>
         <li><strong>Remote Execution:</strong> Audit <code>WMI</code>, <code>WinRM</code>, or <code>PsExec</code> activity.</li>
         <li><strong>Service Creation:</strong> Check for Event ID 7045 (New Service) following a remote login.</li>
       </ul>
 
-      <h3>Trace the Source ("Patient Zero")</h3>
+      <h4>Trace the Source ("Patient Zero")</h4>
       <ul>
         <li>Identify the source IP/Hostname of the movement attempt.</li>
         <li>Analyze how the source host was compromised (e.g., check for initial phishing or web exploit).</li>
       </ul>
 
-      <h3>Identify Credential Usage</h3>
+      <h4>Identify Credential Usage</h4>
       <ul>
         <li><strong>Privilege Check:</strong> Is the actor using a service account or a domain admin account to move?</li>
         <li><strong>Success vs. Failure:</strong> Multiple login failures followed by one success suggests <strong>Brute Force</strong> or <strong>Credential Replay</strong>.</li>

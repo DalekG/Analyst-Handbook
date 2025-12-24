@@ -10,7 +10,7 @@
   <main>
 
     <header>
-      <h1>Port Scanning</h1>
+      <h>Port Scanning</h>
     </header>
 
     <section id="overview">
@@ -34,7 +34,7 @@
     <section id="workflow">
       <h2>Investigation Workflow</h2>
 
-      <h3>Identify the Scanner</h3>
+      <h4>Identify the Scanner</h4>
       <h4>Internal or External Source?</h4>
       <ul>
         <li>
@@ -60,14 +60,14 @@
         <li><strong>Strobe Scan:</strong> Rapidly hitting a small set of commonly exploited ports across many systems.</li>
       </ul>
 
-      <h3>Analyze the Target(s)</h3>
+      <h4>Analyze the Target(s)</h4>
       <ul>
         <li><strong>Specific Target:</strong> Is a critical asset (DC, Database, Web Server) being targeted?</li>
         <li><strong>Broad Sweep:</strong> Is the scanner hitting an entire subnet or VLAN?</li>
         <li><strong>Result of Scan:</strong> Did the scanner identify open ports? Check firewall/host logs for "Accept" vs. "Deny" actions.</li>
       </ul>
 
-      <h3>Determine Legitimacy</h3>
+      <h4>Determine Legitimacy</h4>
       <h4>Is this an authorized scan?</h4>
       <ul>
         <li><strong>Vulnerability Management:</strong> Check if a scheduled scan (Nessus, Qualys, Rapid7) is active.</li>
@@ -75,7 +75,7 @@
         <li><strong>No Change Ticket:</strong> If no authorization is found, treat as unauthorized/malicious.</li>
       </ul>
 
-      <h3>Response Actions</h3>
+      <h4>Response Actions</h4>
       <ul>
         <li>
           <strong>Internal Source:</strong>
